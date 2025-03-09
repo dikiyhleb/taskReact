@@ -16,6 +16,7 @@ import AppTheme from "../../theme/AppTheme";
 import { BusinessOutlined } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
+import ManagerTable from "../../components/UI/ManagerTable";
 
 const drawerWidth = 240;
 
@@ -40,6 +41,7 @@ export default function Manager(props: { disableCustomTheme?: boolean }) {
               {activePage}
             </Typography>
           </Toolbar>
+          <ManagerTable />
         </AppBar>
         <Drawer
           sx={{
