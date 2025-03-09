@@ -16,6 +16,9 @@ import { styled } from "@mui/material/styles";
 import ForgotPassword from "../../components/ForgotPassword";
 import AppTheme from "../../theme/AppTheme";
 import ColorModeSelect from "../../theme/ColorModeSelect.tsx";
+import { AuthContext } from "../../context/AuthContext.ts";
+import BaseService from "../../API/BaseService.tsx";
+import LoginResponse from "../../DTOs/LoginResponse.ts";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -65,6 +68,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const auth = React.useContext(AuthContext);
+
+  const baseService = new BaseService();
+
+  if (!auth) return <>Auth error!</>;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -75,14 +83,20 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (emailError || passwordError) {
-      event.preventDefault();
       return;
     }
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+
+    console.log(data.get("email"));
+
+    baseService.login(data).then((res: LoginResponse) => {
+      console.log("login...");
+      console.log(res);
+
+      localStorage.setItem("token", res.token);
+      auth.setAuth(true);
     });
   };
 
@@ -201,7 +215,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             <Button
               fullWidth
               variant="outlined"
-              onClick={() => alert("Sign in with Google")}
+              onClick={() => alert("Continue without sign in")}
             >
               Continue without sign in
             </Button>

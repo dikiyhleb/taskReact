@@ -5,7 +5,7 @@ import { AuthContext } from "./context/AuthContext";
 import { useState } from "react";
 
 function App() {
-  const [isAuth, setAuth] = useState(true);
+  const [isAuth, setAuth] = useState(false);
 
   return (
     <AuthContext.Provider value={{ isAuth, setAuth }}>
