@@ -89,15 +89,14 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     }
     const data = new FormData(event.currentTarget);
 
-    console.log(data.get("email"));
-
-    baseService.login(data).then((res: LoginResponse) => {
-      console.log("login...");
-      console.log(res);
-
-      localStorage.setItem("token", res.token);
-      auth.setAuth(true);
-    });
+    try {
+      baseService.login(data).then((res: LoginResponse) => {
+        auth.setAuthUser(res.data);
+        auth.setAuth(true);
+      });
+    } catch (error) {
+      console.error("try baseService.login():", error);
+    }
   };
 
   const validateInputs = () => {

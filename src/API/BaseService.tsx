@@ -1,20 +1,20 @@
-export default class BaseService {
-  private API = "https://41a6867a08e37e5e.mokky.dev";
+import LoginResponse from "../DTOs/LoginResponse";
+import { api } from "../interceptor/axiosInterceptor";
 
+//TODO обработка ошибки авторизации, проверка наличия res.data.token
+export default class BaseService {
   public async login(form: FormData) {
-    const res = await fetch(`${this.API}/auth`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: form.get("email"),
-        password: form.get("password"),
-      }),
+    const res = await api.post<LoginResponse>("/auth", {
+      email: form.get("email"),
+      password: form.get("password"),
     });
 
-    return res.json();
+    console.log("login...");
+    console.log(res);
+
+    localStorage.setItem("token", res.data.token);
+
+    return res.data;
   }
 
   getAllBuilding() {}

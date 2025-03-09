@@ -14,10 +14,15 @@ import ListItemText from "@mui/material/ListItemText";
 import MailIcon from "@mui/icons-material/Mail";
 import AppTheme from "../../theme/AppTheme";
 import { BusinessOutlined } from "@mui/icons-material";
+import { AuthContext } from "../../context/AuthContext";
+import { useState } from "react";
 
 const drawerWidth = 240;
 
 export default function Manager(props: { disableCustomTheme?: boolean }) {
+  const auth = React.useContext(AuthContext);
+  const [activePage, setActivePage] = useState<string>("");
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -32,7 +37,7 @@ export default function Manager(props: { disableCustomTheme?: boolean }) {
         >
           <Toolbar>
             <Typography variant="h6" noWrap component="div">
-              Manager dashboard
+              {activePage}
             </Typography>
           </Toolbar>
         </AppBar>
@@ -49,13 +54,13 @@ export default function Manager(props: { disableCustomTheme?: boolean }) {
           anchor="left"
         >
           <Toolbar>
-            <Typography>Менеджер</Typography>
+            <Typography>{auth?.authUser?.name}</Typography>
           </Toolbar>
           <Divider />
           <List>
             {["Объекты", "Список заявок"].map((text, index) => (
               <ListItem key={text} disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={() => setActivePage(text)}>
                   <ListItemIcon>
                     {index % 2 === 0 ? <BusinessOutlined /> : <MailIcon />}
                   </ListItemIcon>
