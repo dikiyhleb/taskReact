@@ -7,15 +7,15 @@ import { useAuthInterceptor } from "./interceptor/axiosInterceptor";
 import UserEntity from "./models/UserEntity";
 
 function App() {
-  const [isAuth, setAuth] = useState(false);
+  const [isAuth, setAuth] = useState(true);
   const [authUser, setAuthUser] = useState<UserEntity | null>(null);
 
   useAuthInterceptor();
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    if (token) {
-      setAuth(true);
+    if (!token) {
+      setAuth(false);
     }
   }, []);
 

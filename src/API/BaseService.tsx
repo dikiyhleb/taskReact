@@ -10,12 +10,19 @@ export default class BaseService {
     });
 
     console.log("login...");
-    console.log(res);
+    console.log(res.data);
 
-    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("accessToken", res.data.token);
 
     return res.data;
   }
 
-  getAllBuilding() {}
+  public async getAllBuildingByUserId(id: number) {
+    const res = await api.get("/buildings", { params: { user_id: id } });
+
+    console.log("getAllBuildingByUserId(): getting buildings!");
+    console.log(res.data);
+
+    return res.data;
+  }
 }

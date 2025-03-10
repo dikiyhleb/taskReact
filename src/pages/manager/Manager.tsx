@@ -17,12 +17,21 @@ import { BusinessOutlined } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
 import ManagerTable from "../../components/UI/ManagerTable";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const drawerWidth = 240;
 
 export default function Manager(props: { disableCustomTheme?: boolean }) {
   const auth = React.useContext(AuthContext);
   const [activePage, setActivePage] = useState<string>("");
+
+  function logout() {
+    auth?.setAuth(false);
+    auth?.setAuthUser(null);
+    localStorage.removeItem("accessToken");
+  }
 
   return (
     <AppTheme {...props}>
@@ -41,6 +50,12 @@ export default function Manager(props: { disableCustomTheme?: boolean }) {
               {activePage}
             </Typography>
           </Toolbar>
+          <TextField
+            fullWidth
+            id="outlined-basic"
+            label="Поиск"
+            variant="outlined"
+          />
           <ManagerTable />
         </AppBar>
         <Drawer
@@ -56,7 +71,14 @@ export default function Manager(props: { disableCustomTheme?: boolean }) {
           anchor="left"
         >
           <Toolbar>
-            <Typography>{auth?.authUser?.name}</Typography>
+            <div
+              style={{ gap: "45px", justifyContent: "center", display: "flex" }}
+            >
+              <Typography>{auth?.authUser?.name}</Typography>
+              <IconButton aria-label="delete" onClick={logout}>
+                <LogoutIcon />
+              </IconButton>
+            </div>
           </Toolbar>
           <Divider />
           <List>

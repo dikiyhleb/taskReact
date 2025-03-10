@@ -1,22 +1,21 @@
-import { GridColDef } from "@mui/x-data-grid/models/colDef/gridColDef";
+import { GridColDef } from "@mui/x-data-grid";
 
 export const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "firstName", headerName: "First name", width: 130 },
-  { field: "lastName", headerName: "Last name", width: 130 },
+  { field: "name", headerName: "Название", width: 240 },
+  { field: "address", headerName: "Адрес", width: 270 },
   {
-    field: "age",
-    headerName: "Age",
-    type: "number",
-    width: 90,
+    field: "registration_date",
+    headerName: "Дата регистрации",
+    type: "string",
+    width: 170,
   },
   {
-    field: "fullName",
-    headerName: "Full name",
+    field: "applications_count",
+    headerName: "Кол-во заявок",
     description: "This column has a value getter and is not sortable.",
     sortable: false,
     width: 160,
-    valueGetter: (value, row) => `${row.firstName || ""} ${row.lastName || ""}`,
   },
 ];
 
