@@ -6,21 +6,42 @@ import { useEffect, useState } from "react";
 import { useAuthInterceptor } from "./interceptor/axiosInterceptor";
 import UserEntity from "./models/UserEntity";
 
+//TODO отделить isLoading от AuthContext
+//TODO userService?
 function App() {
-  const [isAuth, setAuth] = useState(true);
+  const [isAuth, setAuth] = useState(false);
   const [authUser, setAuthUser] = useState<UserEntity | null>(null);
 
   useAuthInterceptor();
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
-    if (!token) {
-      setAuth(false);
+    const currentUser = localStorage.getItem("currentUser");
+    if (token) {
+      setAuth(true);
+    }
+    if (currentUser) {
+      setAuthUser(JSON.parse(currentUser));
     }
   }, []);
 
+  useEffect(() => {
+    if (authUser) {
+      localStorage.setItem("currentUser", JSON.stringify(authUser));
+    } else {
+      localStorage.removeItem("currentUser");
+    }
+  }, [authUser]);
+
   return (
-    <AuthContext.Provider value={{ isAuth, setAuth, authUser, setAuthUser }}>
+    <AuthContext.Provider
+      value={{
+        isAuth,
+        setAuth,
+        authUser,
+        setAuthUser,
+      }}
+    >
       <BrowserRouter>
         <AppRouter />
       </BrowserRouter>

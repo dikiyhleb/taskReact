@@ -6,6 +6,7 @@ import BuildingEntity from "../../models/BuildingEntity";
 import BaseService from "../../API/BaseService";
 import { AuthContext } from "../../context/AuthContext";
 
+//TODO почему вызывается useEffect два раза при обновлении страницы?
 export default function ManagerTable() {
   const baseService = new BaseService();
   const auth = React.useContext(AuthContext);
@@ -23,7 +24,7 @@ export default function ManagerTable() {
   }, []);
 
   return (
-    <Paper sx={{ height: 400, width: "100%" }}>
+    <Paper sx={{ width: "100%" }}>
       <DataGrid
         rows={dataTable}
         columns={columns}

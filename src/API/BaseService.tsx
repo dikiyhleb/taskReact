@@ -13,6 +13,7 @@ export default class BaseService {
     console.log(res.data);
 
     localStorage.setItem("accessToken", res.data.token);
+    localStorage.setItem("currentUser", JSON.stringify(res.data.data));
 
     return res.data;
   }

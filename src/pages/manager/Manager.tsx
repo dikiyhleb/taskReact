@@ -23,9 +23,11 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 const drawerWidth = 240;
 
+//TODO переделать механизм перемещения между страницами в List
+//TODO label у поиска не по центру
 export default function Manager(props: { disableCustomTheme?: boolean }) {
   const auth = React.useContext(AuthContext);
-  const [activePage, setActivePage] = useState<string>("");
+  const [activePage, setActivePage] = useState<string>("Объекты");
 
   function logout() {
     auth?.setAuth(false);
@@ -43,6 +45,9 @@ export default function Manager(props: { disableCustomTheme?: boolean }) {
           sx={{
             width: `calc(100% - ${drawerWidth}px)`,
             ml: `${drawerWidth}px`,
+            display: "flex",
+            alignItems: "center",
+            height: "100%",
           }}
         >
           <Toolbar>
@@ -50,13 +55,16 @@ export default function Manager(props: { disableCustomTheme?: boolean }) {
               {activePage}
             </Typography>
           </Toolbar>
-          <TextField
-            fullWidth
-            id="outlined-basic"
-            label="Поиск"
-            variant="outlined"
-          />
-          <ManagerTable />
+          <div style={{ width: "95%" }}>
+            <TextField
+              fullWidth
+              id="outlined-basic"
+              label="Поиск"
+              variant="outlined"
+              sx={{ marginBottom: "30px" }}
+            />
+            <ManagerTable />
+          </div>
         </AppBar>
         <Drawer
           sx={{
