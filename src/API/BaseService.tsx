@@ -42,7 +42,7 @@ export default class BaseService {
     limit: number
   ) {
     const res = await api.get("/buildings", {
-      params: { user_id: id, page: page, limit: limit },
+      params: { user_id: id, page: page + 1, limit: limit },
     });
 
     console.log("getPageBuildingsByUserId(): getting pageBuildings!");

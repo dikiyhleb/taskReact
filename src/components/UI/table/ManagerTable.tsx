@@ -12,7 +12,11 @@ import { BuildingsPage } from "../../../DTOs/BuildingsPage";
 import BaseService from "../../../API/BaseService";
 import { AuthContext } from "../../../context/AuthContext";
 
-export default function ManagerTable() {
+interface ManagerTableType {
+  activePage: string;
+}
+
+export default function ManagerTable({ activePage }: ManagerTableType) {
   const auth = React.useContext(AuthContext);
   const baseService = new BaseService();
   const [data, setData] = React.useState<BuildingsPage>(new BuildingsPage());
@@ -22,7 +26,7 @@ export default function ManagerTable() {
   React.useEffect(() => {
     if (auth?.authUser?.id) {
       baseService
-        .getPageBuildingsByUserId(auth?.authUser?.id, page + 1, limit)
+        .getPageBuildingsByUserId(auth?.authUser?.id, page, limit)
         .then((res: BuildingsPage) => {
           setData(res);
         });

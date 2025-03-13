@@ -1,44 +1,33 @@
-import { GridColDef } from "@mui/x-data-grid";
+import { MyTableCell } from "../components/UI/table/MyTableCell";
 
-export const objectСolumns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Название", width: 240 },
-  { field: "address", headerName: "Адрес", width: 270 },
+export const objectСolumns: MyTableCell[] = [
+  { name: "id", width: 70 },
+  { name: "name", width: 240 },
+  { name: "address", width: 270 },
   {
-    field: "registration_date",
-    headerName: "Дата регистрации",
-    type: "string",
+    name: "registration_date",
     width: 170,
   },
   {
-    field: "applications_count",
-    headerName: "Кол-во заявок",
-    description: "This column has a value getter and is not sortable.",
-    sortable: false,
+    name: "applications_count",
     width: 160,
   },
 ];
 
-export const applicationColumns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "title", headerName: "Название", width: 240 },
-  { field: "email", headerName: "Email", width: 270 },
+export const applicationColumns: MyTableCell[] = [
+  { name: "id", width: 70 },
+  { name: "title", width: 240 },
+  { name: "email", width: 270 },
   {
-    field: "submission_date",
-    headerName: "Дата подачи",
-    type: "string",
+    name: "submission_date",
     width: 170,
   },
   {
-    field: "status",
-    headerName: "Статус",
-    type: "string",
+    name: "status",
     width: 170,
   },
   {
-    field: "building",
-    headerName: "Объект",
-    type: "string",
+    name: "building",
     width: 170,
   },
 ];
