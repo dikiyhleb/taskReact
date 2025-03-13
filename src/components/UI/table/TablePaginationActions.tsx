@@ -9,7 +9,7 @@ import { useTheme } from "@mui/material/styles";
 interface TablePaginationActionsProps {
   count: number;
   page: number;
-  limit: number;
+  rowsPerPage: number;
   onPageChange: (
     event: React.MouseEvent<HTMLButtonElement>,
     newPage: number
@@ -20,7 +20,7 @@ export default function TablePaginationActions(
   props: TablePaginationActionsProps
 ) {
   const theme = useTheme();
-  const { count, page, limit, onPageChange } = props;
+  const { count, page, rowsPerPage, onPageChange } = props;
 
   const handleFirstPageButtonClick = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -43,7 +43,7 @@ export default function TablePaginationActions(
   const handleLastPageButtonClick = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    onPageChange(event, Math.max(0, Math.ceil(count / limit) - 1));
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
 
   return (
@@ -68,7 +68,7 @@ export default function TablePaginationActions(
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / limit) - 1}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
         {theme.direction === "rtl" ? (
@@ -79,7 +79,7 @@ export default function TablePaginationActions(
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / limit) - 1}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
         {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}

@@ -52,19 +52,19 @@ export default function ManagerTable() {
         <TableBody>
           {data.items.map((row) => (
             <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
+              <TableCell sx={{ width: 100 }} component="th" scope="row">
                 {row.id}
               </TableCell>
-              <TableCell sx={{ width: 160 }} align="right">
+              <TableCell sx={{ width: 160 }} align="left">
                 {row.name}
               </TableCell>
-              <TableCell sx={{ width: 160 }} align="right">
+              <TableCell sx={{ width: 160 }} align="center">
                 {row.address}
               </TableCell>
-              <TableCell sx={{ width: 160 }} align="right">
+              <TableCell sx={{ width: 160 }} align="center">
                 {row.registration_date}
               </TableCell>
-              <TableCell sx={{ width: 160 }} align="right">
+              <TableCell sx={{ width: 160 }} align="center">
                 {row.applications_count}
               </TableCell>
             </TableRow>
@@ -78,10 +78,10 @@ export default function ManagerTable() {
         <TableFooter>
           <TableRow>
             <TablePagination
-              limitOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={3}
+              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              colSpan={5}
               count={data.meta?.total_items}
-              limit={limit}
+              rowsPerPage={limit}
               page={page}
               slotProps={{
                 select: {
@@ -92,7 +92,7 @@ export default function ManagerTable() {
                 },
               }}
               onPageChange={handleChangePage}
-              onlimitChange={handleChangeLimit}
+              onRowsPerPageChange={handleChangeLimit}
               ActionsComponent={TablePaginationActions}
             />
           </TableRow>
