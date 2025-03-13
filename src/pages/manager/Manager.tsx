@@ -63,7 +63,7 @@ export default function Manager(props: { disableCustomTheme?: boolean }) {
               variant="outlined"
               sx={{ marginBottom: "30px" }}
             />
-            <ManagerTable />
+            <ManagerTable activePage={activePage} />
           </div>
         </AppBar>
         <Drawer

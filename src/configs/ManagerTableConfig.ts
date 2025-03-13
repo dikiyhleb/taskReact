@@ -1,6 +1,6 @@
 import { GridColDef } from "@mui/x-data-grid";
 
-export const columns: GridColDef[] = [
+export const objectСolumns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 70 },
   { field: "name", headerName: "Название", width: 240 },
   { field: "address", headerName: "Адрес", width: 270 },
@@ -19,4 +19,26 @@ export const columns: GridColDef[] = [
   },
 ];
 
-export const paginationModel = { page: 0, pageSize: 5 };
+export const applicationColumns: GridColDef[] = [
+  { field: "id", headerName: "ID", width: 70 },
+  { field: "title", headerName: "Название", width: 240 },
+  { field: "email", headerName: "Email", width: 270 },
+  {
+    field: "submission_date",
+    headerName: "Дата подачи",
+    type: "string",
+    width: 170,
+  },
+  {
+    field: "status",
+    headerName: "Статус",
+    type: "string",
+    width: 170,
+  },
+  {
+    field: "building",
+    headerName: "Объект",
+    type: "string",
+    width: 170,
+  },
+];

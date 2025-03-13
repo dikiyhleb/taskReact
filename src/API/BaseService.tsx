@@ -18,7 +18,7 @@ export default class BaseService {
     return res.data;
   }
 
-  public async getAllBuildingByUserId(id: number) {
+  public async getAllBuildingsByUserId(id: number) {
     const res = await api.get("/buildings", { params: { user_id: id } });
 
     console.log("getAllBuildingByUserId(): getting buildings!");
