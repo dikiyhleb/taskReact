@@ -26,4 +26,28 @@ export default class BaseService {
 
     return res.data;
   }
+
+  public async getAllApplicationsByUserId(id: number) {
+    const res = await api.get("/applications", { params: { user_id: id } });
+
+    console.log("getAllApplicationsByUserId(): getting applications!");
+    console.log(res.data);
+
+    return res.data;
+  }
+
+  public async getPageBuildingsByUserId(
+    id: number,
+    page: number,
+    limit: number
+  ) {
+    const res = await api.get("/buildings", {
+      params: { user_id: id, page: page, limit: limit },
+    });
+
+    console.log("getPageBuildingsByUserId(): getting pageBuildings!");
+    console.log(res.data);
+
+    return res.data;
+  }
 }

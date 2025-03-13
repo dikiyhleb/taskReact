@@ -16,23 +16,47 @@ import AppTheme from "../../theme/AppTheme";
 import { BusinessOutlined } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
-import ManagerTable from "../../components/UI/ManagerTable";
+import ManagerTable from "../../components/UI/table/ManagerTable";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
+import BaseService from "../../API/BaseService";
+import { ApplicationEntity } from "../../models/ApplicationEntity";
+import BuildingEntity from "../../models/BuildingEntity";
 
 const drawerWidth = 240;
 
 //TODO переделать механизм перемещения между страницами в List
 //TODO label у поиска не по центру
 export default function Manager(props: { disableCustomTheme?: boolean }) {
+  const baseService = new BaseService();
   const auth = React.useContext(AuthContext);
   const [activePage, setActivePage] = useState<string>("Объекты");
+  const [applications, setApplications] = React.useState<
+    ApplicationEntity[] | []
+  >([]);
+  const [buildings, setBuildings] = React.useState<BuildingEntity[] | []>([]);
 
   function logout() {
     auth?.setAuth(false);
     auth?.setAuthUser(null);
     localStorage.removeItem("accessToken");
+    initTable();
+  }
+
+  function initTable() {
+    if (auth?.authUser?.id) {
+      baseService
+        .getAllBuildingsByUserId(auth?.authUser?.id)
+        .then((res: BuildingEntity[]) => {
+          setBuildings(res);
+        });
+      baseService
+        .getAllApplicationsByUserId(auth.authUser.id)
+        .then((res: ApplicationEntity[]) => {
+          setApplications(res);
+        });
+    }
   }
 
   return (
@@ -63,7 +87,7 @@ export default function Manager(props: { disableCustomTheme?: boolean }) {
               variant="outlined"
               sx={{ marginBottom: "30px" }}
             />
-            <ManagerTable activePage={activePage} />
+            <ManagerTable />
           </div>
         </AppBar>
         <Drawer
