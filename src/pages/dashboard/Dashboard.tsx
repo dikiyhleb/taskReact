@@ -20,6 +20,7 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Outlet, useNavigate } from "react-router";
+import { FilterSearchContext } from "../../context/InputRefContext";
 
 const drawerWidth = 240;
 
@@ -29,6 +30,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
   const auth = React.useContext(AuthContext);
   const [activePage, setActivePage] = useState<string>("Объекты");
+  const [filter, setFilter] = useState<string | null>("");
 
   function logout() {
     auth?.setAuth(false);
@@ -40,6 +42,10 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
     setActivePage(page);
     if (page == "Объекты") navigate("/buildings");
     if (page == "Список заявок") navigate("/applications");
+  }
+
+  function handleInputChange(value: string) {
+    setFilter(value);
   }
 
   return (
@@ -69,8 +75,11 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
               label="Поиск"
               variant="outlined"
               sx={{ marginBottom: "30px" }}
+              onChange={(e) => handleInputChange(e.target.value)}
             />
-            <Outlet />
+            <FilterSearchContext.Provider value={{ filter: filter, setFilter }}>
+              <Outlet />
+            </FilterSearchContext.Provider>
           </div>
         </AppBar>
         <Drawer

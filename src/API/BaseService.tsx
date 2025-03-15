@@ -2,6 +2,7 @@ import LoginResponse from "../DTOs/LoginResponse";
 import { api } from "../interceptor/axiosInterceptor";
 
 //TODO обработка ошибки авторизации, проверка наличия res.data.token
+//TODO фильтрация по нескольким полям одновременно
 export default class BaseService {
   public async login(form: FormData) {
     const res = await api.post<LoginResponse>("/auth", {
@@ -36,20 +37,27 @@ export default class BaseService {
     return res.data;
   }
 
-  public async getPageBuildingsWithSortByUserId(
+  public async getBuildings(
     id: number,
     page: number,
     limit: number,
     order: string,
-    orderBy: string
+    orderBy: string,
+    filter: string | null | undefined
   ) {
+    const params = new URLSearchParams();
+
+    params.append("user_id", id.toString());
+    params.append("page", (page + 1).toString());
+    params.append("limit", limit.toString());
+    params.append("sortBy", order == "asc" ? orderBy : `-${orderBy}`);
+
+    if (filter) {
+      params.append("name", `*${filter}`);
+    }
+
     const res = await api.get("/buildings", {
-      params: {
-        user_id: id,
-        page: page + 1,
-        limit: limit,
-        sortBy: order == "asc" ? orderBy : `-${orderBy}`,
-      },
+      params: params,
     });
 
     console.log("getPageBuildingsWithSortByUserId(): getting pageBuildings!");
@@ -58,20 +66,27 @@ export default class BaseService {
     return res.data;
   }
 
-  public async getPageApplicationsWithSortByUserId(
+  public async getApplications(
     id: number,
     page: number,
     limit: number,
     order: string,
-    orderBy: string
+    orderBy: string,
+    filter: string | null | undefined
   ) {
+    const params = new URLSearchParams();
+
+    params.append("user_id", id.toString());
+    params.append("page", (page + 1).toString());
+    params.append("limit", limit.toString());
+    params.append("sortBy", order == "asc" ? orderBy : `-${orderBy}`);
+
+    if (filter) {
+      params.append("title", `*${filter}`);
+    }
+
     const res = await api.get("/applications", {
-      params: {
-        user_id: id,
-        page: page + 1,
-        limit: limit,
-        sortBy: order == "asc" ? orderBy : `-${orderBy}`,
-      },
+      params: params,
     });
 
     console.log(

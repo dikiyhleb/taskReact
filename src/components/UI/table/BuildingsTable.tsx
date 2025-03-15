@@ -13,11 +13,13 @@ import BaseService from "../../../API/BaseService";
 import { AuthContext } from "../../../context/AuthContext";
 import { TableHead, TableSortLabel } from "@mui/material";
 import { buildingCells } from "./configs/ManagerTableConfig";
+import { FilterSearchContext } from "../../../context/InputRefContext";
 
 type Order = "asc" | "desc";
 
 export default function BuildingsTable() {
   const auth = React.useContext(AuthContext);
+  const searchInput = React.useContext(FilterSearchContext);
   const baseService = new BaseService();
   const [data, setData] = React.useState<BuildingsPage>(new BuildingsPage());
   const [page, setPage] = React.useState(0);
@@ -28,18 +30,19 @@ export default function BuildingsTable() {
   React.useEffect(() => {
     if (auth?.authUser?.id) {
       baseService
-        .getPageBuildingsWithSortByUserId(
+        .getBuildings(
           auth?.authUser?.id,
           page,
           limit,
           order,
-          orderBy
+          orderBy,
+          searchInput?.filter
         )
         .then((res: BuildingsPage) => {
           setData(res);
         });
     }
-  }, [page, limit, order, orderBy]);
+  }, [page, limit, order, orderBy, searchInput?.filter]);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * limit - data.meta?.total_items) : 0;

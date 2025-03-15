@@ -13,11 +13,13 @@ import { AuthContext } from "../../../context/AuthContext";
 import { ApplicationsPage } from "../../../DTOs/ApplicationsPage";
 import { TableHead, TableSortLabel } from "@mui/material";
 import { applicationCells } from "./configs/ManagerTableConfig";
+import { FilterSearchContext } from "../../../context/InputRefContext";
 
 type Order = "asc" | "desc";
 
 export default function ApplicationsTable() {
   const auth = React.useContext(AuthContext);
+  const searchInput = React.useContext(FilterSearchContext);
   const baseService = new BaseService();
   const [data, setData] = React.useState<ApplicationsPage>(
     new ApplicationsPage()
@@ -30,18 +32,19 @@ export default function ApplicationsTable() {
   React.useEffect(() => {
     if (auth?.authUser?.id) {
       baseService
-        .getPageApplicationsWithSortByUserId(
+        .getApplications(
           auth?.authUser?.id,
           page,
           limit,
           order,
-          orderBy
+          orderBy,
+          searchInput?.filter
         )
         .then((res: ApplicationsPage) => {
           setData(res);
         });
     }
-  }, [page, limit, order, orderBy]);
+  }, [page, limit, order, orderBy, searchInput?.filter]);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * limit - data.meta?.total_items) : 0;
