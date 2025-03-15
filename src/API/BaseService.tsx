@@ -50,4 +50,19 @@ export default class BaseService {
 
     return res.data;
   }
+
+  public async getPageApplicationsByUserId(
+    id: number,
+    page: number,
+    limit: number
+  ) {
+    const res = await api.get("/applications", {
+      params: { user_id: id, page: page + 1, limit: limit },
+    });
+
+    console.log("getPageApplicationsByUserId(): getting pageBuildings!");
+    console.log(res.data);
+
+    return res.data;
+  }
 }

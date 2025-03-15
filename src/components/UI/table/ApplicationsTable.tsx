@@ -8,26 +8,25 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import TablePaginationActions from "./TablePaginationActions";
-import { BuildingsPage } from "../../../DTOs/BuildingsPage";
 import BaseService from "../../../API/BaseService";
 import { AuthContext } from "../../../context/AuthContext";
+import { ApplicationsPage } from "../../../DTOs/ApplicationsPage";
+import { TableHead } from "@mui/material";
 
-interface ManagerTableType {
-  activePage: string;
-}
-
-export default function ManagerTable({ activePage }: ManagerTableType) {
+export default function ApplicationsTable() {
   const auth = React.useContext(AuthContext);
   const baseService = new BaseService();
-  const [data, setData] = React.useState<BuildingsPage>(new BuildingsPage());
+  const [data, setData] = React.useState<ApplicationsPage>(
+    new ApplicationsPage()
+  );
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(5);
 
   React.useEffect(() => {
     if (auth?.authUser?.id) {
       baseService
-        .getPageBuildingsByUserId(auth?.authUser?.id, page, limit)
-        .then((res: BuildingsPage) => {
+        .getPageApplicationsByUserId(auth?.authUser?.id, page, limit)
+        .then((res: ApplicationsPage) => {
           setData(res);
         });
     }
@@ -53,23 +52,36 @@ export default function ManagerTable({ activePage }: ManagerTableType) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell>Название</TableCell>
+            <TableCell align="center">Email</TableCell>
+            <TableCell align="center">Дата подачи</TableCell>
+            <TableCell align="center">Статус</TableCell>
+            <TableCell align="center">ID объекта</TableCell>
+          </TableRow>
+        </TableHead>
         <TableBody>
           {data.items.map((row) => (
-            <TableRow key={row.name}>
+            <TableRow key={row.title}>
               <TableCell sx={{ width: 100 }} component="th" scope="row">
                 {row.id}
               </TableCell>
               <TableCell sx={{ width: 160 }} align="left">
-                {row.name}
+                {row.title}
               </TableCell>
               <TableCell sx={{ width: 160 }} align="center">
-                {row.address}
+                {row.email}
               </TableCell>
               <TableCell sx={{ width: 160 }} align="center">
-                {row.registration_date}
+                {row.submission_date}
               </TableCell>
               <TableCell sx={{ width: 160 }} align="center">
-                {row.applications_count}
+                {row.status}
+              </TableCell>
+              <TableCell sx={{ width: 160 }} align="center">
+                {row.building_id}
               </TableCell>
             </TableRow>
           ))}
@@ -83,7 +95,7 @@ export default function ManagerTable({ activePage }: ManagerTableType) {
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={5}
+              colSpan={6}
               count={data.meta?.total_items}
               rowsPerPage={limit}
               page={page}

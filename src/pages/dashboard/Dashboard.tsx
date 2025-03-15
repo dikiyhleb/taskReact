@@ -19,44 +19,27 @@ import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
-import BaseService from "../../API/BaseService";
-import { ApplicationEntity } from "../../models/ApplicationEntity";
-import BuildingEntity from "../../models/BuildingEntity";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 
 const drawerWidth = 240;
 
-//TODO переделать механизм перемещения между страницами в List
 //TODO label у поиска не по центру
+//TODO переделать choosePage
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
-  const baseService = new BaseService();
+  const navigate = useNavigate();
   const auth = React.useContext(AuthContext);
   const [activePage, setActivePage] = useState<string>("Объекты");
-  const [applications, setApplications] = React.useState<
-    ApplicationEntity[] | []
-  >([]);
-  const [buildings, setBuildings] = React.useState<BuildingEntity[] | []>([]);
 
   function logout() {
     auth?.setAuth(false);
     auth?.setAuthUser(null);
     localStorage.removeItem("accessToken");
-    initTable();
   }
 
-  function initTable() {
-    if (auth?.authUser?.id) {
-      baseService
-        .getAllBuildingsByUserId(auth?.authUser?.id)
-        .then((res: BuildingEntity[]) => {
-          setBuildings(res);
-        });
-      baseService
-        .getAllApplicationsByUserId(auth.authUser.id)
-        .then((res: ApplicationEntity[]) => {
-          setApplications(res);
-        });
-    }
+  function choosePage(page: string) {
+    setActivePage(page);
+    if (page == "Объекты") navigate("/buildings");
+    if (page == "Список заявок") navigate("/applications");
   }
 
   return (
@@ -116,7 +99,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
           <List>
             {["Объекты", "Список заявок"].map((text, index) => (
               <ListItem key={text} disablePadding>
-                <ListItemButton onClick={() => setActivePage(text)}>
+                <ListItemButton onClick={() => choosePage(text)}>
                   <ListItemIcon>
                     {index % 2 === 0 ? <BusinessOutlined /> : <MailIcon />}
                   </ListItemIcon>

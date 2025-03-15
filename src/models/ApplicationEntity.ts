@@ -1,6 +1,6 @@
 export class ApplicationEntity {
   id: number | null;
-  name: string;
+  title: string;
   description: string;
   email: string;
   submission_date: string;
@@ -9,7 +9,7 @@ export class ApplicationEntity {
 
   constructor() {
     this.id = null;
-    this.name = "";
+    this.title = "";
     this.description = "";
     this.email = "";
     this.submission_date = "";
