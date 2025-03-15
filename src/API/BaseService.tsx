@@ -36,16 +36,23 @@ export default class BaseService {
     return res.data;
   }
 
-  public async getPageBuildingsByUserId(
+  public async getPageBuildingsWithSortByUserId(
     id: number,
     page: number,
-    limit: number
+    limit: number,
+    order: string,
+    orderBy: string
   ) {
     const res = await api.get("/buildings", {
-      params: { user_id: id, page: page + 1, limit: limit },
+      params: {
+        user_id: id,
+        page: page + 1,
+        limit: limit,
+        sortBy: order == "asc" ? orderBy : `-${orderBy}`,
+      },
     });
 
-    console.log("getPageBuildingsByUserId(): getting pageBuildings!");
+    console.log("getPageBuildingsWithSortByUserId(): getting pageBuildings!");
     console.log(res.data);
 
     return res.data;

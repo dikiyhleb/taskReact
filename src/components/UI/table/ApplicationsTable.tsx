@@ -92,24 +92,14 @@ export default function ApplicationsTable() {
         <TableBody>
           {data.items.map((row) => (
             <TableRow key={row.title}>
-              <TableCell sx={{ width: 100 }} component="th" scope="row">
+              <TableCell sx={{ width: 50 }} component="th" scope="row">
                 {row.id}
               </TableCell>
-              <TableCell sx={{ width: 160 }} align="left">
-                {row.title}
-              </TableCell>
-              <TableCell sx={{ width: 160 }} align="left">
-                {row.email}
-              </TableCell>
-              <TableCell sx={{ width: 160 }} align="left">
-                {row.submission_date}
-              </TableCell>
-              <TableCell sx={{ width: 160 }} align="left">
-                {row.status}
-              </TableCell>
-              <TableCell sx={{ width: 160 }} align="left">
-                {row.building_id}
-              </TableCell>
+              <TableCell align="left">{row.title}</TableCell>
+              <TableCell align="left">{row.email}</TableCell>
+              <TableCell align="left">{row.submission_date}</TableCell>
+              <TableCell align="left">{row.status}</TableCell>
+              <TableCell align="left">{row.building_id}</TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (

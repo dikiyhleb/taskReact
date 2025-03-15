@@ -28,12 +28,18 @@ export default function BuildingsTable() {
   React.useEffect(() => {
     if (auth?.authUser?.id) {
       baseService
-        .getPageBuildingsByUserId(auth?.authUser?.id, page, limit)
+        .getPageBuildingsWithSortByUserId(
+          auth?.authUser?.id,
+          page,
+          limit,
+          order,
+          orderBy
+        )
         .then((res: BuildingsPage) => {
           setData(res);
         });
     }
-  }, [page, limit]);
+  }, [page, limit, order, orderBy]);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * limit - data.meta?.total_items) : 0;
@@ -90,21 +96,13 @@ export default function BuildingsTable() {
         <TableBody>
           {data.items.map((row) => (
             <TableRow key={row.name}>
-              <TableCell sx={{ width: 100 }} component="th" scope="row">
+              <TableCell sx={{ width: 50 }} component="th" scope="row">
                 {row.id}
               </TableCell>
-              <TableCell sx={{ width: 160 }} align="left">
-                {row.name}
-              </TableCell>
-              <TableCell sx={{ width: 160 }} align="left">
-                {row.address}
-              </TableCell>
-              <TableCell sx={{ width: 160 }} align="left">
-                {row.registration_date}
-              </TableCell>
-              <TableCell sx={{ width: 160 }} align="left">
-                {row.applications_count}
-              </TableCell>
+              <TableCell align="left">{row.name}</TableCell>
+              <TableCell align="left">{row.address}</TableCell>
+              <TableCell align="left">{row.registration_date}</TableCell>
+              <TableCell align="left">{row.applications_count}</TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (
