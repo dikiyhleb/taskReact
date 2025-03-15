@@ -7,13 +7,16 @@ import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import TablePaginationActions from "./TablePaginationActions";
-import { BuildingsPage } from "../../../DTOs/BuildingsPage";
-import BaseService from "../../../API/BaseService";
-import { AuthContext } from "../../../context/AuthContext";
+import TablePaginationActions from "../TablePaginationActions";
+import { BuildingsPage } from "../../../../DTOs/BuildingsPage";
+import BaseService from "../../../../API/BaseService";
+import { AuthContext } from "../../../../context/AuthContext";
 import { TableHead, TableSortLabel } from "@mui/material";
-import { buildingCells } from "./configs/ManagerTableConfig";
-import { FilterSearchContext } from "../../../context/InputRefContext";
+import { buildingCells } from "../configs/ManagerTableConfig";
+import { FilterSearchContext } from "../../../../context/InputRefContext";
+import BuildingEntity from "../../../../models/BuildingEntity";
+import MyBuildingDialog from "../../dialog/MyBuildingDialog";
+import styles from "./Buildings.module.css";
 
 type Order = "asc" | "desc";
 
@@ -26,6 +29,11 @@ export default function BuildingsTable() {
   const [limit, setLimit] = React.useState(5);
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<string>("ID");
+
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [selBuilding, setSelBuilding] = React.useState<BuildingEntity | null>(
+    null
+  );
 
   React.useEffect(() => {
     if (auth?.authUser?.id) {
@@ -75,6 +83,16 @@ export default function BuildingsTable() {
       handleRequestSort(event, property);
     };
 
+  const handleOpenDialog = (obj: BuildingEntity) => {
+    setOpenDialog(true);
+    setSelBuilding(obj);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelBuilding(null);
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
@@ -98,7 +116,11 @@ export default function BuildingsTable() {
         </TableHead>
         <TableBody>
           {data.items.map((row) => (
-            <TableRow key={row.name}>
+            <TableRow
+              className={styles.row}
+              key={row.name}
+              onClick={() => handleOpenDialog(row)}
+            >
               <TableCell sx={{ width: 50 }} component="th" scope="row">
                 {row.id}
               </TableCell>
@@ -114,6 +136,11 @@ export default function BuildingsTable() {
             </TableRow>
           )}
         </TableBody>
+        <MyBuildingDialog
+          open={openDialog}
+          data={selBuilding}
+          onClose={handleCloseDialog}
+        />
         <TableFooter>
           <TableRow>
             <TablePagination

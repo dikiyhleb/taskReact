@@ -16,7 +16,7 @@ import AppTheme from "../../theme/AppTheme";
 import { BusinessOutlined } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import { useState } from "react";
-import ManagerTable from "../../components/UI/table/BuildingsTable";
+import ManagerTable from "../../components/UI/table/buildings/BuildingsTable";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";

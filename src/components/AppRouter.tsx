@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import SignIn from "../pages/login/SignIn";
 import Dashboard from "../pages/dashboard/Dashboard";
-import BuildingsTable from "./UI/table/BuildingsTable";
+import BuildingsTable from "./UI/table/buildings/BuildingsTable";
 import ApplicationsTable from "./UI/table/ApplicationsTable";
 
 export default function AppRouter() {

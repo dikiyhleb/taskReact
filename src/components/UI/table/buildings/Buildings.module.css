@@ -1,0 +1,8 @@
+.row {
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.row:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Легкое осветление */
+}
