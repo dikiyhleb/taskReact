@@ -58,16 +58,25 @@ export default class BaseService {
     return res.data;
   }
 
-  public async getPageApplicationsByUserId(
+  public async getPageApplicationsWithSortByUserId(
     id: number,
     page: number,
-    limit: number
+    limit: number,
+    order: string,
+    orderBy: string
   ) {
     const res = await api.get("/applications", {
-      params: { user_id: id, page: page + 1, limit: limit },
+      params: {
+        user_id: id,
+        page: page + 1,
+        limit: limit,
+        sortBy: order == "asc" ? orderBy : `-${orderBy}`,
+      },
     });
 
-    console.log("getPageApplicationsByUserId(): getting pageBuildings!");
+    console.log(
+      "getPageApplicationsWithSortByUserId(): getting pageBuildings!"
+    );
     console.log(res.data);
 
     return res.data;

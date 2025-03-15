@@ -30,12 +30,18 @@ export default function ApplicationsTable() {
   React.useEffect(() => {
     if (auth?.authUser?.id) {
       baseService
-        .getPageApplicationsByUserId(auth?.authUser?.id, page, limit)
+        .getPageApplicationsWithSortByUserId(
+          auth?.authUser?.id,
+          page,
+          limit,
+          order,
+          orderBy
+        )
         .then((res: ApplicationsPage) => {
           setData(res);
         });
     }
-  }, [page, limit]);
+  }, [page, limit, order, orderBy]);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * limit - data.meta?.total_items) : 0;
