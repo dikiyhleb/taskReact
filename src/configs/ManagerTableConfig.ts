@@ -1,4 +1,4 @@
-import { MyTableCell } from "../components/UI/table/MyTableCell";
+import { MyTableCell } from "../MyTableCell";
 
 export const objectСolumns: MyTableCell[] = [
   { name: "id", width: 70 },

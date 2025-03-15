@@ -11,7 +11,10 @@ import TablePaginationActions from "./TablePaginationActions";
 import { BuildingsPage } from "../../../DTOs/BuildingsPage";
 import BaseService from "../../../API/BaseService";
 import { AuthContext } from "../../../context/AuthContext";
-import { TableHead } from "@mui/material";
+import { TableHead, TableSortLabel } from "@mui/material";
+import { buildingCells } from "./configs/ManagerTableConfig";
+
+type Order = "asc" | "desc";
 
 export default function BuildingsTable() {
   const auth = React.useContext(AuthContext);
@@ -19,6 +22,8 @@ export default function BuildingsTable() {
   const [data, setData] = React.useState<BuildingsPage>(new BuildingsPage());
   const [page, setPage] = React.useState(0);
   const [limit, setLimit] = React.useState(5);
+  const [order, setOrder] = React.useState<Order>("asc");
+  const [orderBy, setOrderBy] = React.useState<string>("ID");
 
   React.useEffect(() => {
     if (auth?.authUser?.id) {
@@ -47,16 +52,39 @@ export default function BuildingsTable() {
     setPage(0);
   };
 
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: string
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const createSortHandler =
+    (property: string) => (event: React.MouseEvent<unknown>) => {
+      handleRequestSort(event, property);
+    };
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Название</TableCell>
-            <TableCell align="center">Адрес</TableCell>
-            <TableCell align="center">Дата регистрации</TableCell>
-            <TableCell align="center">Кол-во заявок</TableCell>
+            {buildingCells.map((headCell) => (
+              <TableCell
+                key={headCell.id}
+                sortDirection={orderBy === headCell.id ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                </TableSortLabel>
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -68,13 +96,13 @@ export default function BuildingsTable() {
               <TableCell sx={{ width: 160 }} align="left">
                 {row.name}
               </TableCell>
-              <TableCell sx={{ width: 160 }} align="center">
+              <TableCell sx={{ width: 160 }} align="left">
                 {row.address}
               </TableCell>
-              <TableCell sx={{ width: 160 }} align="center">
+              <TableCell sx={{ width: 160 }} align="left">
                 {row.registration_date}
               </TableCell>
-              <TableCell sx={{ width: 160 }} align="center">
+              <TableCell sx={{ width: 160 }} align="left">
                 {row.applications_count}
               </TableCell>
             </TableRow>
