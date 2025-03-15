@@ -19,6 +19,7 @@ import ColorModeSelect from "../../theme/ColorModeSelect.tsx";
 import { AuthContext } from "../../context/AuthContext.ts";
 import BaseService from "../../API/BaseService.tsx";
 import LoginResponse from "../../DTOs/LoginResponse.ts";
+import { useNavigate } from "react-router";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -69,6 +70,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const auth = React.useContext(AuthContext);
+  const navigate = useNavigate();
 
   const baseService = new BaseService();
 
@@ -97,6 +99,10 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     } catch (error) {
       console.error("try baseService.login():", error);
     }
+  };
+
+  const continueWithoutLogin = () => {
+    navigate("/new");
   };
 
   const validateInputs = () => {
@@ -211,11 +217,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           </Box>
           <Divider>or</Divider>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert("Continue without sign in")}
-            >
+            <Button fullWidth variant="outlined" onClick={continueWithoutLogin}>
               Continue without sign in
             </Button>
             <Typography sx={{ textAlign: "center" }}>

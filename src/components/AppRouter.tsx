@@ -5,6 +5,7 @@ import SignIn from "../pages/login/SignIn";
 import Dashboard from "../pages/dashboard/Dashboard";
 import BuildingsTable from "./UI/table/buildings/BuildingsTable";
 import ApplicationsTable from "./UI/table/ApplicationsTable";
+import UserNoLogin from "../pages/user/UserNoLogin";
 
 export default function AppRouter() {
   const auth = useContext(AuthContext);
@@ -23,6 +24,7 @@ export default function AppRouter() {
   ) : (
     <Routes>
       <Route path="/login" element={<SignIn />} />
+      <Route path="/new" element={<UserNoLogin />}></Route>
       <Route path="*" element={<Navigate to={"/login"} />} />
     </Routes>
   );
