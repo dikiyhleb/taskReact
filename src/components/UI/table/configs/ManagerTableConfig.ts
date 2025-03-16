@@ -1,33 +1,35 @@
-import { HeadCell } from "./MyTableCell";
+import { GridColDef } from "@mui/x-data-grid";
 
-export const buildingCells: HeadCell[] = [
-  { id: "id", label: "ID" },
-  { id: "name", label: "Название" },
-  { id: "address", label: "Адрес" },
+export const buildingCells: GridColDef[] = [
+  { field: "id", headerName: "ID", width: 100 },
+  { field: "name", headerName: "Название", width: 350 },
+  { field: "address", headerName: "Адрес", width: 350 },
   {
-    id: "registration_date",
-    label: "Дата регистрации",
+    field: "registration_date",
+    headerName: "Дата регистрации",
+    width: 200,
   },
   {
-    id: "applications_count",
-    label: "Кол-во заявок",
+    field: "applications_count",
+    headerName: "Кол-во заявок",
+    width: 200,
   },
 ];
 
-export const applicationCells: HeadCell[] = [
-  { id: "id", label: "ID" },
-  { id: "title", label: "Название" },
-  { id: "email", label: "Email" },
+export const applicationCells: GridColDef[] = [
+  { field: "id", headerName: "ID", width: 50 },
+  { field: "title", headerName: "Название" },
+  { field: "email", headerName: "Email" },
   {
-    id: "submission_date",
-    label: "Дата подачи",
+    field: "submission_date",
+    headerName: "Дата подачи",
   },
   {
-    id: "status",
-    label: "Статус",
+    field: "status",
+    headerName: "Статус",
   },
   {
-    id: "building",
-    label: "ID объекта",
+    field: "building",
+    headerName: "ID объекта",
   },
 ];
