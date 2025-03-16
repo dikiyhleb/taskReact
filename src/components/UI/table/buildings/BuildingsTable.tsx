@@ -14,27 +14,23 @@ export default function BuildingsTable() {
     () => ({
       getRows: async (params) => {
         if (auth?.authUser?.id) {
-          try {
-            const sortItem = params.sortModel?.[0];
-            const filterItem = params.filterModel?.items?.[0];
+          const sortItem = params.sortModel?.[0];
+          const filterItem = params.filterModel?.items?.[0];
 
-            const response: BuildingsPage = await baseService.getBuildings(
-              auth?.authUser?.id,
-              params.paginationModel.page,
-              params.paginationModel.pageSize,
-              sortItem?.sort,
-              sortItem?.field,
-              filterItem?.field,
-              filterItem?.value
-            );
+          const response: BuildingsPage = await baseService.getBuildings(
+            auth?.authUser?.id,
+            params.paginationModel.page,
+            params.paginationModel.pageSize,
+            sortItem?.sort,
+            sortItem?.field,
+            filterItem?.field,
+            filterItem?.value
+          );
 
-            return {
-              rows: response.items,
-              rowCount: response.meta.total_items,
-            };
-          } catch (error) {
-            console.log("Buildings load error", error);
-          }
+          return {
+            rows: response.items,
+            rowCount: response.meta.total_items,
+          };
         }
         return { rows: [], rowCount: 0 };
       },
@@ -53,7 +49,7 @@ export default function BuildingsTable() {
   );
 
   return (
-    <Paper sx={{ height: 400, width: "100%" }}>
+    <Paper sx={{ width: "100%" }}>
       <DataGridPro
         columns={buildingCells}
         unstable_dataSource={dataSource}

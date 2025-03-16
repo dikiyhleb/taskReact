@@ -17,19 +17,22 @@ export const buildingCells: GridColDef[] = [
 ];
 
 export const applicationCells: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 50 },
-  { field: "title", headerName: "Название" },
-  { field: "email", headerName: "Email" },
+  { field: "id", headerName: "ID", width: 100 },
+  { field: "title", headerName: "Название", width: 250 },
+  { field: "email", headerName: "Email", width: 250 },
   {
     field: "submission_date",
     headerName: "Дата подачи",
+    width: 200,
   },
   {
     field: "status",
     headerName: "Статус",
+    width: 200,
   },
   {
     field: "building",
     headerName: "ID объекта",
+    width: 200,
   },
 ];

@@ -74,8 +74,9 @@ export default class BaseService {
     id: number,
     page: number,
     limit: number,
-    order: string,
-    orderBy: string,
+    order: string | null | undefined,
+    orderBy: string | null | undefined,
+    filterField: string | null | undefined,
     filter: string | null | undefined
   ) {
     const params = new URLSearchParams();
@@ -83,10 +84,13 @@ export default class BaseService {
     params.append("user_id", id.toString());
     params.append("page", (page + 1).toString());
     params.append("limit", limit.toString());
-    params.append("sortBy", order == "asc" ? orderBy : `-${orderBy}`);
 
-    if (filter) {
-      params.append("title", `*${filter}`);
+    if (order && orderBy) {
+      params.append("sortBy", order == "asc" ? orderBy : `-${orderBy}`);
+    }
+
+    if (filter && filterField) {
+      params.append(filterField, `*${filter}`);
     }
 
     const res = await api.get("/applications", {
