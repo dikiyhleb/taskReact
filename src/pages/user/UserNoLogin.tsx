@@ -1,33 +1,48 @@
 import {
-  CssBaseline,
   Box,
-  FormLabel,
-  OutlinedInput,
   Button,
-  Typography,
+  CssBaseline,
+  FormControl,
+  FormLabel,
   IconButton,
+  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
-import AppTheme from "../../theme/AppTheme";
-import ColorModeIconDropdown from "../../theme/ColorModeIconDropdown";
-import Grid from "@mui/material/Grid2";
 import { styled } from "@mui/material/styles";
-import { ArrowBackOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 import React from "react";
+import MuiCard from "@mui/material/Card";
+import AppTheme from "../../theme/AppTheme";
+import ColorModeSelect from "../../theme/ColorModeSelect";
+import { ArrowBackIosOutlined } from "@mui/icons-material";
 
-const FormGrid = styled(Grid)(() => ({
+const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
+  alignSelf: "center",
+  width: "100%",
+  padding: theme.spacing(4),
+  gap: theme.spacing(2),
+  margin: "auto",
+  [theme.breakpoints.up("sm")]: {
+    maxWidth: "650px",
+  },
+  boxShadow:
+    "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
+  ...theme.applyStyles("dark", {
+    boxShadow:
+      "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px",
+  }),
 }));
 
-const TopBar = styled("div")(() => ({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "16px 24px",
-}));
-
-const CustomMain = styled("div")(({ theme }) => ({
+const SignInContainer = styled(Stack)(({ theme }) => ({
+  height: "calc((1 - var(--template-frame-height, 0)) * 100dvh)",
+  minHeight: "100%",
+  padding: theme.spacing(2),
+  [theme.breakpoints.up("sm")]: {
+    padding: theme.spacing(4),
+  },
   "&::before": {
     content: '""',
     display: "block",
@@ -44,15 +59,6 @@ const CustomMain = styled("div")(({ theme }) => ({
   },
 }));
 
-const CustomBox = styled(Box)(() => ({
-  position: "fixed",
-  top: "65%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "800px",
-  height: "800px",
-}));
-
 export default function UserNoLogin(props: { disableCustomTheme?: boolean }) {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
@@ -62,7 +68,9 @@ export default function UserNoLogin(props: { disableCustomTheme?: boolean }) {
     navigate("/login");
   };
 
-  const validateInputs = () => {
+  const handleSubmit = () => {};
+
+  const validateEmail = () => {
     const email = document.getElementById("email") as HTMLInputElement;
 
     let isValid = true;
@@ -82,84 +90,122 @@ export default function UserNoLogin(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-      <CustomMain>
-        <TopBar>
-          <IconButton onClick={backToLogin}>
-            <ArrowBackOutlined />
-          </IconButton>
-          <ColorModeIconDropdown />
-        </TopBar>
-        <CustomBox>
-          <Grid container spacing={3}>
-            <FormGrid>
-              <Typography variant="h2">Cоздать новую заявку</Typography>
-            </FormGrid>
-            <FormGrid size={{ xs: 12 }}>
-              <FormLabel htmlFor="email" required>
-                Email
-              </FormLabel>
-              <OutlinedInput
+      <SignInContainer direction="column" justifyContent="space-between">
+        <ColorModeSelect
+          sx={{ position: "fixed", top: "1rem", right: "1rem" }}
+        />
+        <Card variant="outlined">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              textAlign: "center",
+            }}
+          >
+            <IconButton onClick={backToLogin}>
+              <ArrowBackIosOutlined />
+            </IconButton>
+            <Typography
+              component="h1"
+              variant="h4"
+              sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+            >
+              Создать новую заявку
+            </Typography>
+          </div>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              gap: 2,
+            }}
+          >
+            <FormControl>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <TextField
+                error={emailError}
+                helperText={emailErrorMessage}
                 id="email"
-                name="email"
                 type="email"
-                placeholder="mail@example.com"
+                name="email"
+                placeholder="your@email.com"
                 autoComplete="email"
+                autoFocus
                 required
-                size="small"
+                fullWidth
+                variant="outlined"
+                color={emailError ? "error" : "primary"}
               />
-            </FormGrid>
-
-            <FormGrid size={{ xs: 12 }}>
-              <FormLabel htmlFor="building" required>
-                Название ЖК
-              </FormLabel>
-              <OutlinedInput
-                id="building"
-                name="building"
+            </FormControl>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <FormControl>
+                <FormLabel htmlFor="building">Название ЖК</FormLabel>
+                <TextField
+                  name="building"
+                  placeholder="ЖК Белые зори"
+                  type="text"
+                  id="building"
+                  autoFocus
+                  required
+                  sx={{ width: "275px" }}
+                  variant="outlined"
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="address">Адрес</FormLabel>
+                <TextField
+                  name="address"
+                  placeholder="Улица, дом, город"
+                  type="text"
+                  id="address"
+                  autoFocus
+                  required
+                  sx={{ width: "275px" }}
+                  variant="outlined"
+                />
+              </FormControl>
+            </div>
+            <FormControl>
+              <FormLabel htmlFor="title">Тема заявки</FormLabel>
+              <TextField
+                name="title"
+                placeholder="Поломка лифта"
                 type="text"
-                placeholder="Название"
-                autoComplete=""
+                id="title"
+                autoFocus
                 required
-                size="small"
+                fullWidth
+                variant="outlined"
               />
-            </FormGrid>
-            <FormGrid size={{ xs: 12 }}>
-              <FormLabel htmlFor="address" required>
-                Адрес
-              </FormLabel>
-              <OutlinedInput
-                id="address"
-                name="address"
-                type="address"
-                placeholder="Улица, дом"
-                autoComplete="shipping address-line1"
-                required
-                size="small"
-              />
-            </FormGrid>
-            <FormGrid size={{ xs: 12 }}>
-              <FormLabel htmlFor="description" required>
-                Описание
-              </FormLabel>
-              <OutlinedInput
-                id="description"
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="description">Описание</FormLabel>
+              <TextField
                 name="description"
+                placeholder="Текст сообщения"
                 type="text"
-                placeholder="Введите описание заявки"
-                autoComplete=""
+                id="description"
+                autoFocus
                 required
-                size="small"
-                sx={{ height: "120px", alignItems: "start" }}
+                fullWidth
+                variant="outlined"
               />
-            </FormGrid>
-            <FormGrid size={{ xs: 12 }}>
-              <Button variant="outlined" onClick={validateInputs}>
-                Отправить
-              </Button>
-            </FormGrid>
-          </Grid>
-        </CustomBox>
-      </CustomMain>
+            </FormControl>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              onClick={validateEmail}
+            >
+              Отправить
+            </Button>
+          </Box>
+        </Card>
+      </SignInContainer>
     </AppTheme>
   );
 }

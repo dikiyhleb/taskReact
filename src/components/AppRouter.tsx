@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import SignIn from "../pages/login/SignIn";
 import Dashboard from "../pages/dashboard/Dashboard";
 import BuildingsTable from "./UI/table/buildings/BuildingsTable";
-import ApplicationsTable from "./UI/table/ApplicationsTable";
+import ApplicationsTable from "./UI/table/applications/ApplicationsTable";
 import UserNoLogin from "../pages/user/UserNoLogin";
 import Status from "../pages/status/Status";
 

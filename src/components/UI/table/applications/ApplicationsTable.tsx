@@ -1,10 +1,10 @@
 import * as React from "react";
-import BaseService from "../../../API/BaseService";
-import { AuthContext } from "../../../context/AuthContext";
-import { ApplicationsPage } from "../../../DTOs/ApplicationsPage";
 import { DataGridPro, GridDataSource } from "@mui/x-data-grid-pro";
 import { Paper } from "@mui/material";
-import { applicationCells } from "./configs/ManagerTableConfig";
+import BaseService from "../../../../API/BaseService";
+import { applicationCells } from "../configs/ManagerTableConfig";
+import { AuthContext } from "../../../../context/AuthContext";
+import { ApplicationsPage } from "../../../../DTOs/ApplicationsPage";
 
 export default function ApplicationsTable() {
   const auth = React.useContext(AuthContext);
