@@ -144,7 +144,7 @@ export default function BuildingsTable() {
         <TableFooter>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              rowsPerPageOptions={[5, 10]}
               colSpan={5}
               count={data.meta?.total_items}
               rowsPerPage={limit}

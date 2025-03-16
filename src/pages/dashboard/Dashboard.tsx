@@ -24,7 +24,6 @@ import { FilterSearchContext } from "../../context/InputRefContext";
 
 const drawerWidth = 240;
 
-//TODO label у поиска не по центру
 //TODO переделать choosePage
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
@@ -71,10 +70,12 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
           <div style={{ width: "95%" }}>
             <TextField
               fullWidth
-              id="outlined-basic"
-              label="Поиск"
-              variant="outlined"
-              sx={{ marginBottom: "30px" }}
+              id="filled-basic"
+              label="Поиск по названию"
+              variant="filled"
+              sx={{
+                marginBottom: "30px",
+              }}
               onChange={(e) => handleInputChange(e.target.value)}
             />
             <FilterSearchContext.Provider value={{ filter: filter, setFilter }}>

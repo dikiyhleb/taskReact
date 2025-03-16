@@ -145,7 +145,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             variant="h4"
             sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
           >
-            Sign in
+            Войти
           </Typography>
           <Box
             component="form"
@@ -176,7 +176,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
+              <FormLabel htmlFor="password">Пароль</FormLabel>
               <TextField
                 error={passwordError}
                 helperText={passwordErrorMessage}
@@ -194,7 +194,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             </FormControl>
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              label="Запомнить меня"
             />
             <ForgotPassword open={open} handleClose={handleClose} />
             <Button
@@ -203,7 +203,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="contained"
               onClick={validateInputs}
             >
-              Sign in
+              Войти
             </Button>
             <Link
               component="button"
@@ -212,22 +212,22 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="body2"
               sx={{ alignSelf: "center" }}
             >
-              Forgot your password?
+              Забыли пароль?
             </Link>
           </Box>
-          <Divider>or</Divider>
+          <Divider>или</Divider>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Button fullWidth variant="outlined" onClick={continueWithoutLogin}>
-              Continue without sign in
+              Создать заявку без входа
             </Button>
             <Typography sx={{ textAlign: "center" }}>
-              Don&apos;t have an account?{" "}
+              Нету аккаунта?{" "}
               <Link
                 href="/material-ui/getting-started/templates/sign-in/"
                 variant="body2"
                 sx={{ alignSelf: "center" }}
               >
-                Sign up
+                Регистрация
               </Link>
             </Typography>
           </Box>

@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useAuthInterceptor } from "./interceptor/axiosInterceptor";
 import UserEntity from "./models/UserEntity";
 
-//TODO отделить isLoading от AuthContext
 //TODO userService?
 function App() {
   const [isAuth, setAuth] = useState(false);

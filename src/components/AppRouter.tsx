@@ -6,6 +6,7 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import BuildingsTable from "./UI/table/buildings/BuildingsTable";
 import ApplicationsTable from "./UI/table/ApplicationsTable";
 import UserNoLogin from "../pages/user/UserNoLogin";
+import Status from "../pages/status/Status";
 
 export default function AppRouter() {
   const auth = useContext(AuthContext);
@@ -13,6 +14,7 @@ export default function AppRouter() {
   if (!auth) return <div style={{ color: "red" }}>Auth error!!!</div>;
 
   //TODO Вынести Table в один файл, изменять только TableBody
+  //TODO ДЛЯ !isAuth Вынести задний фон в шаблон остальные компоненты в children
   return auth.isAuth ? (
     <Routes>
       <Route path="/" element={<Dashboard />}>
@@ -25,6 +27,7 @@ export default function AppRouter() {
     <Routes>
       <Route path="/login" element={<SignIn />} />
       <Route path="/new" element={<UserNoLogin />}></Route>
+      <Route path="/status" element={<Status />}></Route>
       <Route path="*" element={<Navigate to={"/login"} />} />
     </Routes>
   );

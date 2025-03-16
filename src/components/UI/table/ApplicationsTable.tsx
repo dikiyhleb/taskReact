@@ -120,7 +120,7 @@ export default function ApplicationsTable() {
         <TableFooter>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              rowsPerPageOptions={[5, 10]}
               colSpan={6}
               count={data.meta?.total_items}
               rowsPerPage={limit}
