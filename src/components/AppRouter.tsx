@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import SignIn from "../pages/login/SignIn";
 import Dashboard from "../pages/dashboard/Dashboard";
@@ -7,9 +7,12 @@ import BuildingsTable from "./UI/table/buildings/BuildingsTable";
 import ApplicationsTable from "./UI/table/applications/ApplicationsTable";
 import UserNoLogin from "../pages/user/UserNoLogin";
 import Status from "../pages/status/Status";
+import { Role } from "../models/Role.enum";
 
 export default function AppRouter() {
   const auth = useContext(AuthContext);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [userRole, setUserRole] = useState<Role | null>(null);
 
   if (!auth) return <div style={{ color: "red" }}>Auth error!!!</div>;
 
