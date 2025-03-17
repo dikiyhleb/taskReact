@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import SignIn from "../pages/login/SignIn";
 import Dashboard from "../pages/dashboard/Dashboard";
@@ -8,11 +8,10 @@ import ApplicationsTable from "./UI/table/applications/ApplicationsTable";
 import UserNoLogin from "../pages/user/UserNoLogin";
 import Status from "../pages/status/Status";
 import { Role } from "../models/Role.enum";
+import RoleBasedRoute from "../security/RoleBasedRoute";
 
 export default function AppRouter() {
   const auth = useContext(AuthContext);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [userRole, setUserRole] = useState<Role | null>(null);
 
   if (!auth) return <div style={{ color: "red" }}>Auth error!!!</div>;
 
@@ -20,11 +19,21 @@ export default function AppRouter() {
   //TODO ДЛЯ !isAuth Вынести задний фон в шаблон остальные компоненты в children
   return auth.isAuth ? (
     <Routes>
-      <Route path="/" element={<Dashboard />}>
+      <Route
+        path="/"
+        element={
+          <RoleBasedRoute
+            isAuthenticated={auth.isAuth}
+            userRole={auth.authUser?.role ?? null}
+            requiredRole={Role.MANAGER}
+            children={<Dashboard />}
+          />
+        }
+      >
         <Route index path="buildings" element={<BuildingsTable />} />
         <Route path="applications" element={<ApplicationsTable />} />
+        <Route path="*" element={<Navigate to={"/buildings"} />} />
       </Route>
-      <Route path="*" element={<Navigate to={"/buildings"} />} />
     </Routes>
   ) : (
     <Routes>

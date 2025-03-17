@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
-import { Navigate, RouteProps } from "react-router";
+import { RouteProps } from "react-router";
 import { Role } from "../models/Role.enum";
 
 interface RoleBasedRouteType extends Omit<RouteProps, "element"> {
   isAuthenticated: boolean;
-  userRole: Role;
-  requiredRole: Role;
+  userRole: Role | null;
+  requiredRole: Role | null;
   children: ReactNode;
 }
 
@@ -16,7 +16,9 @@ const RoleBasedRoute = ({
   children,
 }: RoleBasedRouteType) => {
   if (!isAuthenticated || userRole !== requiredRole) {
-    return <Navigate to="/login" replace />;
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("currentUser");
+    return <h3>401 Error!</h3>;
   }
 
   return <>{children}</>;
