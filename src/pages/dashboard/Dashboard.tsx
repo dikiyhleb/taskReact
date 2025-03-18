@@ -21,6 +21,7 @@ import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Outlet, useNavigate } from "react-router";
 import { FilterSearchContext } from "../../context/InputRefContext";
+import AddIcon from "@mui/icons-material/Add";
 
 const drawerWidth = 240;
 
@@ -28,7 +29,7 @@ const drawerWidth = 240;
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
   const auth = React.useContext(AuthContext);
-  const [activePage, setActivePage] = useState<string>("Объекты");
+  const [activePage, setActivePage] = useState<string>("");
   const [filter, setFilter] = useState<string | null>("");
 
   function logout() {
@@ -41,11 +42,23 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
     setActivePage(page);
     if (page == "Объекты") navigate("/buildings");
     if (page == "Список заявок") navigate("/applications");
+    if (page == "Создать заявку") navigate("/new");
   }
 
   function handleInputChange(value: string) {
     setFilter(value);
   }
+
+  React.useEffect(() => {
+    switch (auth?.authUser?.role) {
+      case "MANAGER":
+        setActivePage("Объекты");
+        break;
+      case "USER":
+        setActivePage("Список заявок");
+        break;
+    }
+  }, []);
 
   return (
     <AppTheme {...props}>
@@ -68,16 +81,18 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
             </Typography>
           </Toolbar>
           <div style={{ width: "95%" }}>
-            <TextField
-              fullWidth
-              id="filled-basic"
-              label="Поиск по названию"
-              variant="filled"
-              sx={{
-                marginBottom: "30px",
-              }}
-              onChange={(e) => handleInputChange(e.target.value)}
-            />
+            {activePage != "Создать заявку" && (
+              <TextField
+                fullWidth
+                id="filled-basic"
+                label="Поиск по названию"
+                variant="filled"
+                sx={{
+                  marginBottom: "30px",
+                }}
+                onChange={(e) => handleInputChange(e.target.value)}
+              />
+            )}
             <FilterSearchContext.Provider value={{ filter: filter, setFilter }}>
               <Outlet />
             </FilterSearchContext.Provider>
@@ -106,18 +121,33 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
             </div>
           </Toolbar>
           <Divider />
-          <List>
-            {["Объекты", "Список заявок"].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton onClick={() => choosePage(text)}>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? <BusinessOutlined /> : <MailIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+          {auth?.authUser?.role == "MANAGER" ? (
+            <List>
+              {["Объекты", "Список заявок"].map((text, index) => (
+                <ListItem key={text} disablePadding>
+                  <ListItemButton onClick={() => choosePage(text)}>
+                    <ListItemIcon>
+                      {index % 2 === 0 ? <BusinessOutlined /> : <MailIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <List>
+              {["Список заявок", "Создать заявку"].map((text, index) => (
+                <ListItem key={text} disablePadding>
+                  <ListItemButton onClick={() => choosePage(text)}>
+                    <ListItemIcon>
+                      {index % 2 === 0 ? <MailIcon /> : <AddIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={text} />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          )}
           <Divider />
         </Drawer>
         <Box

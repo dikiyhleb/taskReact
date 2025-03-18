@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Button,
   CssBaseline,
@@ -11,11 +12,14 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router";
-import React from "react";
+import React, { useContext, useState } from "react";
 import MuiCard from "@mui/material/Card";
 import AppTheme from "../../theme/AppTheme";
 import ColorModeSelect from "../../theme/ColorModeSelect";
 import { ArrowBackIosOutlined } from "@mui/icons-material";
+import BuildingEntity from "../../models/BuildingEntity";
+import BaseService from "../../API/BaseService";
+import { AuthContext } from "../../context/AuthContext";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -59,13 +63,30 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export default function UserNoLogin(props: { disableCustomTheme?: boolean }) {
+export default function NewApplication(props: {
+  disableCustomTheme?: boolean;
+}) {
+  const baseService = new BaseService();
+  const auth = useContext(AuthContext);
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
+  const [building, setBuilding] = React.useState<BuildingEntity>(
+    new BuildingEntity()
+  );
+  const [buildings, setBuildings] = React.useState<BuildingEntity[]>([]);
   const navigate = useNavigate();
 
   const backToLogin = () => {
     navigate("/login");
+  };
+
+  const getBuildings = async (filter: string) => {
+    setBuildings([]);
+    await baseService
+      .getBuildingsByFilter(filter)
+      .then((res: BuildingEntity[]) => {
+        setBuildings(res);
+      });
   };
 
   const handleSubmit = () => {};
@@ -137,6 +158,7 @@ export default function UserNoLogin(props: { disableCustomTheme?: boolean }) {
                 autoFocus
                 required
                 fullWidth
+                defaultValue={auth?.authUser?.email}
                 variant="outlined"
                 color={emailError ? "error" : "primary"}
               />
@@ -144,15 +166,48 @@ export default function UserNoLogin(props: { disableCustomTheme?: boolean }) {
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <FormControl>
                 <FormLabel htmlFor="building">Название ЖК</FormLabel>
-                <TextField
-                  name="building"
-                  placeholder="ЖК Белые зори"
-                  type="text"
+                <Autocomplete
+                  freeSolo
                   id="building"
-                  autoFocus
-                  required
-                  sx={{ width: "275px" }}
-                  variant="outlined"
+                  disableClearable
+                  options={buildings}
+                  getOptionLabel={(option) =>
+                    typeof option === "string" ? option : option.name
+                  }
+                  onChange={(event, newValue) => {
+                    if (typeof newValue !== "string") {
+                      setBuilding(newValue); // Запоминаем объект
+                    }
+                  }}
+                  renderOption={(props, option) => {
+                    const label =
+                      typeof option === "string" ? option : option.name;
+                    return (
+                      <li
+                        {...props}
+                        key={typeof option === "string" ? label : option.id}
+                      >
+                        {label}
+                      </li>
+                    );
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      placeholder="ЖК Солнечные зори"
+                      sx={{ width: "275px" }}
+                      variant="outlined"
+                      onChange={(e: { target: { value: string } }) =>
+                        getBuildings(e.target.value)
+                      }
+                      slotProps={{
+                        input: {
+                          ...params.InputProps,
+                          type: "search",
+                        },
+                      }}
+                    />
+                  )}
                 />
               </FormControl>
               <FormControl>
@@ -164,6 +219,7 @@ export default function UserNoLogin(props: { disableCustomTheme?: boolean }) {
                   id="address"
                   autoFocus
                   required
+                  value={building.address}
                   sx={{ width: "275px" }}
                   variant="outlined"
                 />

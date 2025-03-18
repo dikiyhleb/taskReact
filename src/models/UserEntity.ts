@@ -1,13 +1,13 @@
 import { Role } from "./Role.enum";
 
 export default class UserEntity {
-  id: number | null;
+  id: number;
   email: string;
   role: Role | null;
   name: string;
 
   constructor() {
-    this.id = null;
+    this.id = 0;
     this.email = "";
     this.role = null;
     this.name = "";

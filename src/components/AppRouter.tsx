@@ -5,19 +5,27 @@ import SignIn from "../pages/login/SignIn";
 import Dashboard from "../pages/dashboard/Dashboard";
 import BuildingsTable from "./UI/table/buildings/BuildingsTable";
 import ApplicationsTable from "./UI/table/applications/ApplicationsTable";
-import UserNoLogin from "../pages/user/UserNoLogin";
 import Status from "../pages/status/Status";
 import { Role } from "../models/Role.enum";
 import RoleBasedRoute from "../security/RoleBasedRoute";
+import NewApplication from "../pages/user/NewApplication";
 
 export default function AppRouter() {
   const auth = useContext(AuthContext);
 
-  if (!auth) return <div style={{ color: "red" }}>Auth error!!!</div>;
+  if (!auth?.authUser)
+    return (
+      <Routes>
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/new" element={<NewApplication />}></Route>
+        <Route path="/status" element={<Status />}></Route>
+        <Route path="*" element={<Navigate to={"/login"} />} />
+      </Routes>
+    );
 
   //TODO Вынести Table в один файл, изменять только TableBody
   //TODO ДЛЯ !isAuth Вынести задний фон в шаблон остальные компоненты в children
-  return auth.isAuth ? (
+  return auth.authUser.role == "MANAGER" ? (
     <Routes>
       <Route
         path="/"
@@ -37,10 +45,21 @@ export default function AppRouter() {
     </Routes>
   ) : (
     <Routes>
-      <Route path="/login" element={<SignIn />} />
-      <Route path="/new" element={<UserNoLogin />}></Route>
-      <Route path="/status" element={<Status />}></Route>
-      <Route path="*" element={<Navigate to={"/login"} />} />
+      <Route
+        path="/"
+        element={
+          <RoleBasedRoute
+            isAuthenticated={auth.isAuth}
+            userRole={auth.authUser?.role ?? null}
+            requiredRole={Role.USER}
+            children={<Dashboard />}
+          />
+        }
+      >
+        <Route index path="applications" element={<ApplicationsTable />} />
+        <Route path="new" element={<NewApplication />} />
+        <Route path="*" element={<Navigate to={"/applications"} />} />
+      </Route>
     </Routes>
   );
 }

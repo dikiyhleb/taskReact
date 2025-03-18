@@ -2,7 +2,10 @@ import * as React from "react";
 import { DataGridPro, GridDataSource } from "@mui/x-data-grid-pro";
 import { Paper } from "@mui/material";
 import BaseService from "../../../../API/BaseService";
-import { applicationCells } from "../configs/ManagerTableConfig";
+import {
+  applicationManagerCells,
+  applicationUserCells,
+} from "../configs/ManagerTableConfig";
 import { AuthContext } from "../../../../context/AuthContext";
 import { ApplicationsPage } from "../../../../DTOs/ApplicationsPage";
 
@@ -18,7 +21,7 @@ export default function ApplicationsTable() {
           const filterItem = params.filterModel?.items?.[0];
 
           const response: ApplicationsPage = await baseService.getApplications(
-            auth?.authUser?.id,
+            auth?.authUser,
             params.paginationModel.page,
             params.paginationModel.pageSize,
             sortItem?.sort,
@@ -54,7 +57,11 @@ export default function ApplicationsTable() {
   return (
     <Paper sx={{ width: "100%" }}>
       <DataGridPro
-        columns={applicationCells}
+        columns={
+          auth?.authUser?.role == "MANAGER"
+            ? applicationManagerCells
+            : applicationUserCells
+        }
         unstable_dataSource={dataSource}
         pagination
         paginationMode="server"
