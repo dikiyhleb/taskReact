@@ -91,6 +91,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     }
     const data = new FormData(event.currentTarget);
 
+    console.log(data);
+
     try {
       baseService.login(data).then((res: LoginResponse) => {
         auth.setAuthUser(res.data);

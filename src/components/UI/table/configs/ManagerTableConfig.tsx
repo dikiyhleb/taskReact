@@ -1,4 +1,7 @@
+import { Select } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
+import MenuItem from "@mui/material/MenuItem";
+import { Status } from "../../../../models/Status.enum";
 
 export const buildingCells: GridColDef[] = [
   { field: "id", headerName: "ID", width: 100 },
@@ -16,7 +19,9 @@ export const buildingCells: GridColDef[] = [
   },
 ];
 
-export const applicationManagerCells: GridColDef[] = [
+export const getApplicationManagerCells = (
+  handleStatusChange: (applicationId: number, newStatus: string) => void
+): GridColDef[] => [
   { field: "id", headerName: "ID", width: 100 },
   { field: "title", headerName: "Название", width: 250 },
   { field: "email", headerName: "Email", width: 250 },
@@ -29,6 +34,21 @@ export const applicationManagerCells: GridColDef[] = [
     field: "status",
     headerName: "Статус",
     width: 200,
+    renderCell: (params) => (
+      <Select
+        value={params.value}
+        onChange={(event) => {
+          const newStatus = event.target.value;
+          handleStatusChange(params.row.id, newStatus);
+        }}
+      >
+        {Object.values(Status).map((status) => (
+          <MenuItem key={status} value={status}>
+            {status}
+          </MenuItem>
+        ))}
+      </Select>
+    ),
   },
   {
     field: "building_id",
@@ -36,6 +56,7 @@ export const applicationManagerCells: GridColDef[] = [
     width: 200,
   },
 ];
+
 export const applicationUserCells: GridColDef[] = [
   { field: "id", headerName: "ID", width: 100 },
   { field: "title", headerName: "Название", width: 250 },

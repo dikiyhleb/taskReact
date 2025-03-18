@@ -1,5 +1,6 @@
 import LoginResponse from "../DTOs/LoginResponse";
 import { api } from "../interceptor/axiosInterceptor";
+import { ApplicationEntity } from "../models/ApplicationEntity";
 import UserEntity from "../models/UserEntity";
 
 //TODO обработка ошибки авторизации, проверка наличия res.data.token
@@ -131,6 +132,33 @@ export default class BaseService {
 
     console.log("getBuildingsByFilter");
     console.log(res);
+
+    return res.data;
+  }
+
+  public async createApplication(form: FormData, building_id: number | null) {
+    const app = new ApplicationEntity(
+      null,
+      form.get("title")?.toString(),
+      form.get("description")?.toString(),
+      form.get("email")?.toString(),
+      new Date().toLocaleDateString(),
+      "ожидает рассмотрения",
+      building_id
+    );
+    const res = await api.post("/applications", app);
+
+    return res.data;
+  }
+
+  public async setStatusApp(id: number, status: string) {
+    const res = await api.patch(`/applications/${id}`, { status: status });
+
+    return res.data;
+  }
+
+  public async getAppById(id: string | null) {
+    const res = await api.get(`/applications/${id}`);
 
     return res.data;
   }

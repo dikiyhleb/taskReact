@@ -2,16 +2,18 @@ import * as React from "react";
 import { DataGridPro, GridDataSource } from "@mui/x-data-grid-pro";
 import { Paper } from "@mui/material";
 import BaseService from "../../../../API/BaseService";
-import {
-  applicationManagerCells,
-  applicationUserCells,
-} from "../configs/ManagerTableConfig";
+
 import { AuthContext } from "../../../../context/AuthContext";
 import { ApplicationsPage } from "../../../../DTOs/ApplicationsPage";
+import {
+  getApplicationManagerCells,
+  applicationUserCells,
+} from "../configs/ManagerTableConfig";
 
 export default function ApplicationsTable() {
   const auth = React.useContext(AuthContext);
   const baseService = new BaseService();
+  const [refresh, setRefresh] = React.useState(0);
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
@@ -41,7 +43,7 @@ export default function ApplicationsTable() {
         };
       },
     }),
-    [baseService, auth?.authUser?.id]
+    [baseService, auth?.authUser?.id, refresh]
   );
 
   const initialStateWithPagination = React.useMemo(
@@ -54,12 +56,23 @@ export default function ApplicationsTable() {
     []
   );
 
+  const handleStatusChange = async (appId: number, newStatus: string) => {
+    try {
+      await baseService.setStatusApp(appId, newStatus).then((res) => {
+        console.log(res);
+        setRefresh((prev) => prev + 1);
+      });
+    } catch (error) {
+      console.error("setStatusApp:", error);
+    }
+  };
+
   return (
     <Paper sx={{ width: "100%" }}>
       <DataGridPro
         columns={
           auth?.authUser?.role == "MANAGER"
-            ? applicationManagerCells
+            ? getApplicationManagerCells(handleStatusChange)
             : applicationUserCells
         }
         unstable_dataSource={dataSource}
@@ -69,6 +82,7 @@ export default function ApplicationsTable() {
         filterMode="server"
         initialState={initialStateWithPagination}
         pageSizeOptions={[5, 10]}
+        rowSelection={false}
       />
     </Paper>
   );

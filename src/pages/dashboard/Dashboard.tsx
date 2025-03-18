@@ -36,6 +36,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
     auth?.setAuth(false);
     auth?.setAuthUser(null);
     localStorage.removeItem("accessToken");
+    navigate("/login");
   }
 
   function choosePage(page: string) {

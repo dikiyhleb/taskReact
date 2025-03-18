@@ -89,7 +89,24 @@ export default function NewApplication(props: {
       });
   };
 
-  const handleSubmit = () => {};
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (emailError) {
+      return;
+    }
+
+    const data = new FormData(event.currentTarget);
+
+    try {
+      baseService.createApplication(data, building.id).then((res) => {
+        console.log(res);
+        alert("Заявка успешно создана!");
+        navigate("/login");
+      });
+    } catch (error) {
+      console.error("try createApplication: ", error);
+    }
+  };
 
   const validateEmail = () => {
     const email = document.getElementById("email") as HTMLInputElement;
@@ -197,6 +214,7 @@ export default function NewApplication(props: {
                       placeholder="ЖК Солнечные зори"
                       sx={{ width: "275px" }}
                       variant="outlined"
+                      name="building"
                       onChange={(e: { target: { value: string } }) =>
                         getBuildings(e.target.value)
                       }

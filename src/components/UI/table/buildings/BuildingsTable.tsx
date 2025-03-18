@@ -59,6 +59,7 @@ export default function BuildingsTable() {
         filterMode="server"
         initialState={initialStateWithPagination}
         pageSizeOptions={[5, 10]}
+        rowSelection={false}
       />
     </Paper>
   );
