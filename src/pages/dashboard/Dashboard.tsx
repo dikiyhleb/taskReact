@@ -22,6 +22,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { Outlet, useNavigate } from "react-router";
 import { FilterSearchContext } from "../../context/InputRefContext";
 import AddIcon from "@mui/icons-material/Add";
+import { Role } from "../../models/Role.enum";
 
 const drawerWidth = 240;
 
@@ -52,10 +53,10 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
 
   React.useEffect(() => {
     switch (auth?.authUser?.role) {
-      case "MANAGER":
+      case Role.MANAGER:
         setActivePage("Объекты");
         break;
-      case "USER":
+      case Role.USER:
         setActivePage("Список заявок");
         break;
     }
