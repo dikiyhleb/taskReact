@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router";
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef } from "react";
 import MuiCard from "@mui/material/Card";
 import AppTheme from "../../theme/AppTheme";
 import ColorModeSelect from "../../theme/ColorModeSelect";
@@ -68,8 +68,18 @@ export default function NewApplication(props: {
 }) {
   const baseService = new BaseService();
   const auth = useContext(AuthContext);
+  const emailRef = useRef<HTMLInputElement | null>(null);
+  const titleRef = useRef<HTMLInputElement | null>(null);
+  const desRef = useRef<HTMLInputElement | null>(null);
+  const buildRef = useRef<HTMLInputElement | null>(null);
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
+  const [titleError, setTitleError] = React.useState(false);
+  const [titleErrorMessage, setTitleErrorMessage] = React.useState("");
+  const [desError, setDesError] = React.useState(false);
+  const [desErrorMessage, setDesErrorMessage] = React.useState("");
+  const [buildError, setBuildError] = React.useState(false);
+  const [buildErrorMessage, setBuildErrorMessage] = React.useState("");
   const [building, setBuilding] = React.useState<BuildingEntity>(
     new BuildingEntity()
   );
@@ -91,7 +101,7 @@ export default function NewApplication(props: {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (emailError) {
+    if (emailError || titleError || desError || buildError) {
       return;
     }
 
@@ -108,18 +118,46 @@ export default function NewApplication(props: {
     }
   };
 
-  const validateEmail = () => {
-    const email = document.getElementById("email") as HTMLInputElement;
-
+  const validate = () => {
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    if (
+      !emailRef.current?.value ||
+      !/\S+@\S+\.\S+/.test(emailRef.current?.value)
+    ) {
       setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
+      setEmailErrorMessage("Пожалуйста введите корректный email.");
       isValid = false;
     } else {
       setEmailError(false);
       setEmailErrorMessage("");
+    }
+
+    if (!titleRef.current?.value) {
+      setTitleError(true);
+      setTitleErrorMessage("Пожалуйста введите тему заявки.");
+      isValid = false;
+    } else {
+      setTitleError(false);
+      setTitleErrorMessage("");
+    }
+
+    if (!desRef.current?.value) {
+      setDesError(true);
+      setDesErrorMessage("Пожалуйста введите описание заявки.");
+      isValid = false;
+    } else {
+      setDesError(false);
+      setDesErrorMessage("");
+    }
+
+    if (!buildRef.current?.value) {
+      setBuildError(true);
+      setBuildErrorMessage("Пожалуйста выберите корректный ЖК");
+      isValid = false;
+    } else {
+      setBuildError(false);
+      setBuildErrorMessage("");
     }
 
     return isValid;
@@ -165,6 +203,7 @@ export default function NewApplication(props: {
             <FormControl>
               <FormLabel htmlFor="email">Email</FormLabel>
               <TextField
+                inputRef={emailRef}
                 error={emailError}
                 helperText={emailErrorMessage}
                 id="email"
@@ -211,6 +250,10 @@ export default function NewApplication(props: {
                   renderInput={(params) => (
                     <TextField
                       {...params}
+                      inputRef={buildRef}
+                      error={buildError}
+                      helperText={buildErrorMessage}
+                      color={buildError ? "error" : "primary"}
                       placeholder="ЖК Солнечные зори"
                       sx={{ width: "275px" }}
                       variant="outlined"
@@ -246,6 +289,7 @@ export default function NewApplication(props: {
             <FormControl>
               <FormLabel htmlFor="title">Тема заявки</FormLabel>
               <TextField
+                inputRef={titleRef}
                 name="title"
                 placeholder="Поломка лифта"
                 type="text"
@@ -254,11 +298,15 @@ export default function NewApplication(props: {
                 required
                 fullWidth
                 variant="outlined"
+                error={titleError}
+                helperText={titleErrorMessage}
+                color={titleError ? "error" : "primary"}
               />
             </FormControl>
             <FormControl>
               <FormLabel htmlFor="description">Описание</FormLabel>
               <TextField
+                inputRef={desRef}
                 name="description"
                 placeholder="Текст сообщения"
                 type="text"
@@ -267,13 +315,16 @@ export default function NewApplication(props: {
                 required
                 fullWidth
                 variant="outlined"
+                error={desError}
+                helperText={desErrorMessage}
+                color={desError ? "error" : "primary"}
               />
             </FormControl>
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              onClick={validateEmail}
+              onClick={validate}
             >
               Отправить
             </Button>
