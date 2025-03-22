@@ -72,6 +72,7 @@ export default function NewApplication(props: {
   const titleRef = useRef<HTMLInputElement | null>(null);
   const desRef = useRef<HTMLInputElement | null>(null);
   const buildRef = useRef<HTMLInputElement | null>(null);
+  const addressRef = useRef<HTMLInputElement | null>(null);
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [titleError, setTitleError] = React.useState(false);
@@ -80,6 +81,8 @@ export default function NewApplication(props: {
   const [desErrorMessage, setDesErrorMessage] = React.useState("");
   const [buildError, setBuildError] = React.useState(false);
   const [buildErrorMessage, setBuildErrorMessage] = React.useState("");
+  const [addressError, setAddressError] = React.useState(false);
+  const [addressErrorMessage, setAddressErrorMessage] = React.useState("");
   const [building, setBuilding] = React.useState<BuildingEntity>(
     new BuildingEntity()
   );
@@ -101,7 +104,7 @@ export default function NewApplication(props: {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (emailError || titleError || desError || buildError) {
+    if (emailError || titleError || desError || buildError || addressError) {
       return;
     }
 
@@ -158,6 +161,15 @@ export default function NewApplication(props: {
     } else {
       setBuildError(false);
       setBuildErrorMessage("");
+    }
+
+    if (!addressRef.current?.value) {
+      setAddressError(true);
+      setAddressErrorMessage("Пожалуйста введите корректный адрес");
+      isValid = false;
+    } else {
+      setAddressError(false);
+      setAddressErrorMessage("");
     }
 
     return isValid;
@@ -274,6 +286,10 @@ export default function NewApplication(props: {
               <FormControl>
                 <FormLabel htmlFor="address">Адрес</FormLabel>
                 <TextField
+                  inputRef={addressRef}
+                  error={addressError}
+                  helperText={addressErrorMessage}
+                  color={addressError ? "error" : "primary"}
                   name="address"
                   placeholder="Улица, дом, город"
                   type="text"
