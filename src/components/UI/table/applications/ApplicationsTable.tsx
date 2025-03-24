@@ -9,10 +9,12 @@ import {
   getApplicationManagerCells,
   applicationUserCells,
 } from "../configs/ManagerTableConfig";
+import { FilterSearchContext } from "../../../../context/InputRefContext";
 
 export default function ApplicationsTable() {
   const auth = React.useContext(AuthContext);
   const baseService = new BaseService();
+  const search = React.useContext(FilterSearchContext);
   const [refresh, setRefresh] = React.useState(0);
 
   const dataSource: GridDataSource = React.useMemo(
@@ -43,7 +45,7 @@ export default function ApplicationsTable() {
         };
       },
     }),
-    [baseService, auth?.authUser?.id, refresh]
+    [baseService, auth?.authUser?.id, refresh, search?.filter]
   );
 
   const initialStateWithPagination = React.useMemo(

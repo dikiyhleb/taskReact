@@ -80,7 +80,18 @@ const Input = styledc.input`
 `;
 
 const ShowPassword = styledc.button`
-
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
 `;
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
@@ -155,7 +166,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
-  const clickShowPassword = () => {};
+  const clickShowPassword = () => {
+    setShowPassword(showPassword ? false : true);
+  };
 
   return (
     <AppTheme {...props}>
@@ -206,10 +219,10 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             </FormControl>
             <FormControl>
               <FormLabel htmlFor="password">Пароль</FormLabel>
-              <div style={{ position: "relative" }}>
+              <div style={{ position: "relative", display: "inline-block" }}>
                 <Input
                   placeholder="••••••"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   id="password"
                   name="password"
                   color={passwordError ? "error" : "primary"}
