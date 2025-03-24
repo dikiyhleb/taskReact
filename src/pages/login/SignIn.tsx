@@ -20,6 +20,7 @@ import { AuthContext } from "../../context/AuthContext.ts";
 import BaseService from "../../API/BaseService.tsx";
 import LoginResponse from "../../DTOs/LoginResponse.ts";
 import { useNavigate } from "react-router";
+import styledc from "styled-components";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -63,7 +64,27 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
+const Input = styledc.input`
+  height: 2.5rem;
+  width: 100%;
+  padding: 8px 12px;
+  padding-right: 40px;
+  border-radius: 8px;
+  border: 1px solid rgb(42, 42, 42);
+  background-color: black;
+  align-items: center;
+
+  &:hover{
+    border: 1px solid rgb(82, 99, 110);
+  }
+`;
+
+const ShowPassword = styledc.button`
+
+`;
+
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
+  const [showPassword, setShowPassword] = React.useState(false);
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
@@ -134,6 +155,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
+  const clickShowPassword = () => {};
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -183,7 +206,27 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             </FormControl>
             <FormControl>
               <FormLabel htmlFor="password">Пароль</FormLabel>
-              <TextField
+              <div style={{ position: "relative" }}>
+                <Input
+                  placeholder="••••••"
+                  type="password"
+                  id="password"
+                  name="password"
+                  color={passwordError ? "error" : "primary"}
+                ></Input>
+                <ShowPassword
+                  type="button"
+                  id="tooglePassword"
+                  onClick={clickShowPassword}
+                >
+                  {showPassword ? (
+                    <span className="material-icons">visibility</span>
+                  ) : (
+                    <span className="material-icons">visibility_off</span>
+                  )}
+                </ShowPassword>
+              </div>
+              {/* <TextField
                 error={passwordError}
                 helperText={passwordErrorMessage}
                 name="password"
@@ -196,7 +239,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 fullWidth
                 variant="outlined"
                 color={passwordError ? "error" : "primary"}
-              />
+              /> */}
             </FormControl>
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
