@@ -30,8 +30,8 @@ export default function ApplicationsTable() {
             params.paginationModel.pageSize,
             sortItem?.sort,
             sortItem?.field,
-            filterItem?.field,
-            filterItem?.value
+            filterItem?.field || "title",
+            filterItem?.value || search?.filter
           );
 
           return {

@@ -5,10 +5,12 @@ import BaseService from "../../../../API/BaseService";
 import { AuthContext } from "../../../../context/AuthContext";
 import { DataGridPro, GridDataSource } from "@mui/x-data-grid-pro";
 import { buildingCells } from "../configs/ManagerTableConfig";
+import { FilterSearchContext } from "../../../../context/InputRefContext";
 
 export default function BuildingsTable() {
   const auth = React.useContext(AuthContext);
   const baseService = new BaseService();
+  const search = React.useContext(FilterSearchContext);
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
@@ -23,8 +25,8 @@ export default function BuildingsTable() {
             params.paginationModel.pageSize,
             sortItem?.sort,
             sortItem?.field,
-            filterItem?.field,
-            filterItem?.value
+            filterItem?.field || "name",
+            filterItem?.value || search?.filter
           );
 
           return {
