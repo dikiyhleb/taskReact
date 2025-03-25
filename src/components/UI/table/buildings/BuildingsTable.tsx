@@ -5,12 +5,12 @@ import BaseService from "../../../../API/BaseService";
 import { AuthContext } from "../../../../context/AuthContext";
 import { DataGridPro, GridDataSource } from "@mui/x-data-grid-pro";
 import { buildingCells } from "../configs/ManagerTableConfig";
-import { FilterSearchContext } from "../../../../context/InputRefContext";
+import { TextField, Toolbar, Typography } from "@mui/material";
 
 export default function BuildingsTable() {
   const auth = React.useContext(AuthContext);
   const baseService = new BaseService();
-  const search = React.useContext(FilterSearchContext);
+  const [filter, setFilter] = React.useState<string | null>(null);
 
   const dataSource: GridDataSource = React.useMemo(
     () => ({
@@ -26,7 +26,7 @@ export default function BuildingsTable() {
             sortItem?.sort,
             sortItem?.field,
             filterItem?.field || "name",
-            filterItem?.value || search?.filter
+            filterItem?.value || filter
           );
 
           return {
@@ -37,7 +37,7 @@ export default function BuildingsTable() {
         return { rows: [], rowCount: 0 };
       },
     }),
-    [auth?.authUser?.id, baseService]
+    [auth?.authUser?.id, baseService, filter]
   );
 
   const initialStateWithPagination = React.useMemo(
@@ -50,19 +50,45 @@ export default function BuildingsTable() {
     []
   );
 
+  function handleInputChange(value: string) {
+    setFilter(value);
+  }
+
   return (
-    <Paper sx={{ width: "100%" }}>
-      <DataGridPro
-        columns={buildingCells}
-        unstable_dataSource={dataSource}
-        pagination
-        paginationMode="server"
-        sortingMode="server"
-        filterMode="server"
-        initialState={initialStateWithPagination}
-        pageSizeOptions={[5, 10]}
-        rowSelection={false}
+    <div style={{ width: "95%" }}>
+      <Toolbar>
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{ flexGrow: 1, textAlign: "center" }}
+        >
+          Объекты
+        </Typography>
+      </Toolbar>
+      <TextField
+        fullWidth
+        id="filled-basic"
+        label="Поиск по названию"
+        variant="filled"
+        sx={{
+          marginBottom: "30px",
+        }}
+        onChange={(e) => handleInputChange(e.target.value)}
       />
-    </Paper>
+      <Paper sx={{ width: "100%" }}>
+        <DataGridPro
+          columns={buildingCells}
+          unstable_dataSource={dataSource}
+          pagination
+          paginationMode="server"
+          sortingMode="server"
+          filterMode="server"
+          initialState={initialStateWithPagination}
+          pageSizeOptions={[5, 10]}
+          rowSelection={false}
+        />
+      </Paper>
+    </div>
   );
 }

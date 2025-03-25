@@ -1,6 +1,6 @@
 import * as React from "react";
 import { DataGridPro, GridDataSource } from "@mui/x-data-grid-pro";
-import { Paper } from "@mui/material";
+import { Paper, TextField, Toolbar, Typography } from "@mui/material";
 import BaseService from "../../../../API/BaseService";
 
 import { AuthContext } from "../../../../context/AuthContext";
@@ -9,12 +9,11 @@ import {
   getApplicationManagerCells,
   applicationUserCells,
 } from "../configs/ManagerTableConfig";
-import { FilterSearchContext } from "../../../../context/InputRefContext";
 
 export default function ApplicationsTable() {
   const auth = React.useContext(AuthContext);
   const baseService = new BaseService();
-  const search = React.useContext(FilterSearchContext);
+  const [filter, setFilter] = React.useState<string | null>(null);
   const [refresh, setRefresh] = React.useState(0);
 
   const dataSource: GridDataSource = React.useMemo(
@@ -31,7 +30,7 @@ export default function ApplicationsTable() {
             sortItem?.sort,
             sortItem?.field,
             filterItem?.field || "title",
-            filterItem?.value || search?.filter
+            filterItem?.value || filter
           );
 
           return {
@@ -45,7 +44,7 @@ export default function ApplicationsTable() {
         };
       },
     }),
-    [baseService, auth?.authUser?.id, refresh, search?.filter]
+    [baseService, auth?.authUser?.id, refresh, filter]
   );
 
   const initialStateWithPagination = React.useMemo(
@@ -69,23 +68,49 @@ export default function ApplicationsTable() {
     }
   };
 
+  function handleInputChange(value: string) {
+    setFilter(value);
+  }
+
   return (
-    <Paper sx={{ width: "100%" }}>
-      <DataGridPro
-        columns={
-          auth?.authUser?.role == "MANAGER"
-            ? getApplicationManagerCells(handleStatusChange)
-            : applicationUserCells
-        }
-        unstable_dataSource={dataSource}
-        pagination
-        paginationMode="server"
-        sortingMode="server"
-        filterMode="server"
-        initialState={initialStateWithPagination}
-        pageSizeOptions={[5, 10]}
-        rowSelection={false}
+    <div style={{ width: "95%" }}>
+      <Toolbar>
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{ flexGrow: 1, textAlign: "center" }}
+        >
+          Список заявок
+        </Typography>
+      </Toolbar>
+      <TextField
+        fullWidth
+        id="filled-basic"
+        label="Поиск по названию"
+        variant="filled"
+        sx={{
+          marginBottom: "30px",
+        }}
+        onChange={(e) => handleInputChange(e.target.value)}
       />
-    </Paper>
+      <Paper sx={{ width: "100%" }}>
+        <DataGridPro
+          columns={
+            auth?.authUser?.role == "MANAGER"
+              ? getApplicationManagerCells(handleStatusChange)
+              : applicationUserCells
+          }
+          unstable_dataSource={dataSource}
+          pagination
+          paginationMode="server"
+          sortingMode="server"
+          filterMode="server"
+          initialState={initialStateWithPagination}
+          pageSizeOptions={[5, 10]}
+          rowSelection={false}
+        />
+      </Paper>
+    </div>
   );
 }

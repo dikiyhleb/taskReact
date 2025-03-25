@@ -11,19 +11,12 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import MailIcon from "@mui/icons-material/Mail";
 import AppTheme from "../../theme/AppTheme";
-import { BusinessOutlined } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
-import { useState } from "react";
-import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Outlet, useNavigate } from "react-router";
-import { FilterSearchContext } from "../../context/InputRefContext";
-import AddIcon from "@mui/icons-material/Add";
-import { Role } from "../../models/Role.enum";
-import { managerRoutes, userRoutes } from "../../routes/sidebarRoutes";
+import { privateRoutes } from "../../routes/routes";
 import { CustomRoute } from "../../routes/customRoute";
 
 const drawerWidth = 240;
@@ -32,8 +25,6 @@ const drawerWidth = 240;
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
   const auth = React.useContext(AuthContext);
-  const [activePage, setActivePage] = useState<CustomRoute>(new CustomRoute());
-  const [filter, setFilter] = useState<string | null>("");
 
   function logout() {
     auth?.setAuth(false);
@@ -43,24 +34,10 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   }
 
   function choosePage(route: CustomRoute) {
-    setActivePage(route);
     navigate(route.path);
   }
 
-  function handleInputChange(value: string) {
-    setFilter(value);
-  }
-
-  React.useEffect(() => {
-    switch (auth?.authUser?.role) {
-      case Role.MANAGER:
-        setActivePage(managerRoutes[0]);
-        break;
-      case Role.USER:
-        setActivePage(userRoutes[0]);
-        break;
-    }
-  }, []);
+  React.useEffect(() => {}, []);
 
   return (
     <AppTheme {...props}>
@@ -77,28 +54,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
             height: "100%",
           }}
         >
-          <Toolbar>
-            <Typography variant="h6" noWrap component="div">
-              {activePage.label}
-            </Typography>
-          </Toolbar>
-          <div style={{ width: "95%" }}>
-            {activePage.path != "new" && (
-              <TextField
-                fullWidth
-                id="filled-basic"
-                label="Поиск по названию"
-                variant="filled"
-                sx={{
-                  marginBottom: "30px",
-                }}
-                onChange={(e) => handleInputChange(e.target.value)}
-              />
-            )}
-            <FilterSearchContext.Provider value={{ filter: filter, setFilter }}>
-              <Outlet />
-            </FilterSearchContext.Provider>
-          </div>
+          <Outlet />
         </AppBar>
         <Drawer
           sx={{
@@ -123,9 +79,13 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
             </div>
           </Toolbar>
           <Divider />
-          {auth?.authUser?.role == "MANAGER" ? (
-            <List>
-              {managerRoutes.map((r) => (
+          <List>
+            {privateRoutes
+              .filter(
+                (r) =>
+                  auth?.authUser?.role && r.roles.includes(auth.authUser?.role)
+              )
+              .map((r) => (
                 <ListItem key={r.label} disablePadding>
                   <ListItemButton onClick={() => choosePage(r)}>
                     <ListItemIcon>{r.icon}</ListItemIcon>
@@ -133,19 +93,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
                   </ListItemButton>
                 </ListItem>
               ))}
-            </List>
-          ) : (
-            <List>
-              {userRoutes.map((r) => (
-                <ListItem key={r.label} disablePadding>
-                  <ListItemButton onClick={() => choosePage(r)}>
-                    <ListItemIcon>{r.icon}</ListItemIcon>
-                    <ListItemText primary={r.label} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-          )}
+          </List>
           <Divider />
         </Drawer>
         <Box
