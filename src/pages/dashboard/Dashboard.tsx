@@ -23,6 +23,8 @@ import { Outlet, useNavigate } from "react-router";
 import { FilterSearchContext } from "../../context/InputRefContext";
 import AddIcon from "@mui/icons-material/Add";
 import { Role } from "../../models/Role.enum";
+import { managerRoutes, userRoutes } from "../../routes/sidebarRoutes";
+import { CustomRoute } from "../../routes/customRoute";
 
 const drawerWidth = 240;
 
@@ -30,7 +32,7 @@ const drawerWidth = 240;
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const navigate = useNavigate();
   const auth = React.useContext(AuthContext);
-  const [activePage, setActivePage] = useState<string>("");
+  const [activePage, setActivePage] = useState<CustomRoute>(new CustomRoute());
   const [filter, setFilter] = useState<string | null>("");
 
   function logout() {
@@ -40,11 +42,9 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
     navigate("/login");
   }
 
-  function choosePage(page: string) {
-    setActivePage(page);
-    if (page == "Объекты") navigate("/buildings");
-    if (page == "Список заявок") navigate("/applications");
-    if (page == "Создать заявку") navigate("/new");
+  function choosePage(route: CustomRoute) {
+    setActivePage(route);
+    navigate(route.path);
   }
 
   function handleInputChange(value: string) {
@@ -54,10 +54,10 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   React.useEffect(() => {
     switch (auth?.authUser?.role) {
       case Role.MANAGER:
-        setActivePage("Объекты");
+        setActivePage(managerRoutes[0]);
         break;
       case Role.USER:
-        setActivePage("Список заявок");
+        setActivePage(userRoutes[0]);
         break;
     }
   }, []);
@@ -79,11 +79,11 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
         >
           <Toolbar>
             <Typography variant="h6" noWrap component="div">
-              {activePage}
+              {activePage.label}
             </Typography>
           </Toolbar>
           <div style={{ width: "95%" }}>
-            {activePage != "Создать заявку" && (
+            {activePage.path != "new" && (
               <TextField
                 fullWidth
                 id="filled-basic"
@@ -125,26 +125,22 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
           <Divider />
           {auth?.authUser?.role == "MANAGER" ? (
             <List>
-              {["Объекты", "Список заявок"].map((text, index) => (
-                <ListItem key={text} disablePadding>
-                  <ListItemButton onClick={() => choosePage(text)}>
-                    <ListItemIcon>
-                      {index % 2 === 0 ? <BusinessOutlined /> : <MailIcon />}
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
+              {managerRoutes.map((r) => (
+                <ListItem key={r.label} disablePadding>
+                  <ListItemButton onClick={() => choosePage(r)}>
+                    <ListItemIcon>{r.icon}</ListItemIcon>
+                    <ListItemText primary={r.label} />
                   </ListItemButton>
                 </ListItem>
               ))}
             </List>
           ) : (
             <List>
-              {["Список заявок", "Создать заявку"].map((text, index) => (
-                <ListItem key={text} disablePadding>
-                  <ListItemButton onClick={() => choosePage(text)}>
-                    <ListItemIcon>
-                      {index % 2 === 0 ? <MailIcon /> : <AddIcon />}
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
+              {userRoutes.map((r) => (
+                <ListItem key={r.label} disablePadding>
+                  <ListItemButton onClick={() => choosePage(r)}>
+                    <ListItemIcon>{r.icon}</ListItemIcon>
+                    <ListItemText primary={r.label} />
                   </ListItemButton>
                 </ListItem>
               ))}

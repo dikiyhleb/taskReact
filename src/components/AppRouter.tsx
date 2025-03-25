@@ -23,8 +23,6 @@ export default function AppRouter() {
       </Routes>
     );
 
-  //TODO Вынести Table в один файл, изменять только TableBody
-  //TODO ДЛЯ !isAuth Вынести задний фон в шаблон остальные компоненты в children
   return auth.authUser.role == "MANAGER" ? (
     <Routes>
       <Route
