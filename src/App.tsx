@@ -5,11 +5,14 @@ import { AuthContext } from "./context/AuthContext";
 import { useEffect, useState } from "react";
 import { useAuthInterceptor } from "./interceptor/axiosInterceptor";
 import UserEntity from "./models/UserEntity";
+import ReactModal from "react-modal";
 
 //TODO userService?
 function App() {
   const [isAuth, setAuth] = useState(false);
   const [authUser, setAuthUser] = useState<UserEntity | null>(null);
+
+  ReactModal.setAppElement("#root");
 
   useAuthInterceptor();
 

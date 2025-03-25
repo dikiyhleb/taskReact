@@ -20,6 +20,8 @@ import { ArrowBackIosOutlined } from "@mui/icons-material";
 import BuildingEntity from "../../models/BuildingEntity";
 import BaseService from "../../API/BaseService";
 import { AuthContext } from "../../context/AuthContext";
+import ReactModal from "react-modal";
+import styledc, { createGlobalStyle } from "styled-components";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -63,6 +65,47 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
+const ModalWrapper = styledc(ReactModal)`
+  position: relative;
+  width: 450px;
+  min-height: 150px;
+  background:rgb(52, 52, 52);
+  border: 1px solidrgb(0, 0, 0);
+  margin: 0 auto;
+  border-radius: 10px;
+  outline: none;
+  overflow: hidden;
+`;
+
+const MainWrapper = styledc.div`
+  position: 'relative'
+  padding: 20px;
+`;
+
+const GlobalStyle = createGlobalStyle`
+  .ReactModal__Overlay {
+  background-color: rgba(0, 0, 0, 0.79) !important;
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(-10px);
+  transition: all 500ms ease-in-out;
+  }
+
+  .ReactModal__Overlay--after-open {
+  opacity: 1;
+  transform: scale(1);
+  overflow-y: auto;
+  z-index: 99999 !important;
+  }
+
+  .ReactModal__Overlay--before-close {
+  opacity: 0;
+  transform: translateY(0px);
+  }
+`;
+
 export default function NewApplication(props: {
   disableCustomTheme?: boolean;
 }) {
@@ -87,6 +130,7 @@ export default function NewApplication(props: {
     new BuildingEntity()
   );
   const [buildings, setBuildings] = React.useState<BuildingEntity[]>([]);
+  const [isOpenModal, setIsOpenModal] = React.useState(false);
   const navigate = useNavigate();
 
   const backToLogin = () => {
@@ -113,8 +157,7 @@ export default function NewApplication(props: {
     try {
       baseService.createApplication(data, building.id).then((res) => {
         console.log(res);
-        alert("Заявка успешно создана!");
-        navigate("/login");
+        setIsOpenModal(true);
       });
     } catch (error) {
       console.error("try createApplication: ", error);
@@ -175,9 +218,15 @@ export default function NewApplication(props: {
     return isValid;
   };
 
+  const handleClose = () => {
+    setIsOpenModal(false);
+    navigate("/login");
+  };
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
+      <GlobalStyle />
       <SignInContainer direction="column" justifyContent="space-between">
         <ColorModeSelect
           sx={{ position: "fixed", top: "1rem", right: "1rem" }}
@@ -346,6 +395,20 @@ export default function NewApplication(props: {
             </Button>
           </Box>
         </Card>
+        <ModalWrapper isOpen={isOpenModal} onRequestClose={() => handleClose()}>
+          <MainWrapper>
+            <Typography variant="h3" sx={{ padding: "20px" }}>
+              Заявка успешно создана!
+            </Typography>
+            <Button
+              variant="outlined"
+              onClick={handleClose}
+              sx={{ position: "absolute", bottom: "20px", right: "20px" }}
+            >
+              OK
+            </Button>
+          </MainWrapper>
+        </ModalWrapper>
       </SignInContainer>
     </AppTheme>
   );

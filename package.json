@@ -20,6 +20,7 @@
     "axios": "^1.8.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-modal": "^3.16.3",
     "react-router": "^7.3.0",
     "styled-components": "^6.1.16"
   },
@@ -27,6 +28,7 @@
     "@eslint/js": "^9.21.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@types/react-modal": "^3.16.3",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",
