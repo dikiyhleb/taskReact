@@ -27,14 +27,6 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    if (authUser) {
-      localStorage.setItem("currentUser", JSON.stringify(authUser));
-    } else {
-      localStorage.removeItem("currentUser");
-    }
-  }, [authUser]);
-
   return (
     <AuthContext.Provider
       value={{
